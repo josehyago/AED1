@@ -31,11 +31,37 @@ void aplicar_pontuacao_dupla(int *ppontuacao)
     }
 }
 
+void ler_mapa(int *mapa, int tamanho)
+{
+    int i;
+    for(i = 0; i < tamanho; i++)
+    {
+        printf("Digite o valor do mapa na posicao %d: \n", i);
+        scanf("%d", (mapa + i));
+        if(*(mapa + i) < 0)
+        {
+            printf("Valor invalido, digite um valor positivo.\n");
+            i--;
+        }
+    }
+
+
+}
+
+void mostrar_mapa(const int *mapa, int tamanho)
+{
+    int i;
+    for(i = 0; i < tamanho; i++)
+    {
+        printf("Valor do mapa na posicao %d: %d\n", i, *(mapa + i));
+    }
+}
+
 int main()
 {
-    int vida, tesouro, pontuacao, dano, altura, i;
+    int vida, tesouro, pontuacao, dano, tamanho, altura, i;
     int *pvida, *ptesouro, *ppontuacao;
-    int plataformas[5] = {10, 20, 15, 30, 25};
+    int mapa[5];
 
     pvida = &vida;
     ptesouro = &tesouro;
@@ -44,8 +70,12 @@ int main()
     *pvida = 100;
     *ptesouro = 0;
     *ppontuacao = 100;
+    tamanho = 5;
     altura = 0;
     i = 0;
+
+    ler_mapa(mapa, tamanho);
+    mostrar_mapa(mapa, tamanho);
 
     printf("Seu estado inicial e: vida = %d, tesouro = %d e pontuacao = %d\n", *pvida, *ptesouro, *ppontuacao);
 
@@ -68,11 +98,11 @@ int main()
     printf("Apos pontuacao dupla, seu estado e: vida = %d, tesouro = %d e pontuacao = %d\n", *pvida, *ptesouro, *ppontuacao);
     printf("Endereco da pontuacao no main: %p\n", (void*)ppontuacao);
 
-    for(i = 0; i < 5; i++) //O deslocamento respeita o tipo de ponteiro porque o compilador sabe que um vetor tipo int ocupa 4 bytes na memória, então quando colocamos a instrução *(plataformas + i), o compilador entende que é pra pular 4 bytes * i, indo para o próximo elemento do vetor.
+    for(i = 0; i < tamanho; i++) //O deslocamento respeita o tipo de ponteiro porque o compilador sabe que um vetor tipo int ocupa 4 bytes na memória, então quando colocamos a instrução *(mapa + i), o compilador entende que é pra pular 4 bytes * i, indo para o próximo elemento do vetor.
     {
-        printf("indice: %d\n endereco: %p\n valor: %d\n", i, (void*)(plataformas + i), *(plataformas + i));
-        altura = altura + *(plataformas + i);
-        *ppontuacao = *ppontuacao + *(plataformas + i);
+        printf("indice: %d\n endereco: %p\n valor: %d\n", i, (void*)(mapa + i), *(mapa + i));
+        altura = altura + *(mapa + i);
+        *ppontuacao = *ppontuacao + *(mapa + i);
     }
 
     printf("Altura total: %d\n", altura);
