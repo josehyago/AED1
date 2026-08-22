@@ -57,22 +57,40 @@ void mostrar_mapa(const int *mapa, int tamanho)
     }
 }
 
+void explorar_mapa(int *mapa, int tamanho, int *paltura, int *ppontuacao)
+{
+    int *cursor = mapa;
+    int i;
+    for(i = 0; i < tamanho; i++)
+    {
+        printf("indice: %d\n endereco: %p\n valor: %d\n", i, (void*)(cursor), *cursor);
+       *paltura = *paltura + *cursor;
+        *ppontuacao = *ppontuacao + *cursor;
+        cursor++;
+
+        //Incremento de ponteiro: cursor ++ o compilador não precisa calcular nada desde o início, ele apenas incrementa no endereço atual.
+        //Acesso por índice: *(mapa + i) o compilador precisa calcular o endereço desde o início, somando o tamanho do tipo de dado (int) vezes o índice.
+    
+    }
+
+}
+
 int main()
 {
     int vida, tesouro, pontuacao, dano, tamanho, altura, i;
-    int *pvida, *ptesouro, *ppontuacao;
+    int *pvida, *ptesouro, *ppontuacao, *paltura;
     int mapa[5];
 
     pvida = &vida;
     ptesouro = &tesouro;
     ppontuacao = &pontuacao;
+    paltura = &altura;
 
     *pvida = 100;
     *ptesouro = 0;
     *ppontuacao = 100;
+    *paltura = 0;
     tamanho = 5;
-    altura = 0;
-    i = 0;
 
     ler_mapa(mapa, tamanho);
     mostrar_mapa(mapa, tamanho);
@@ -98,15 +116,9 @@ int main()
     printf("Apos pontuacao dupla, seu estado e: vida = %d, tesouro = %d e pontuacao = %d\n", *pvida, *ptesouro, *ppontuacao);
     printf("Endereco da pontuacao no main: %p\n", (void*)ppontuacao);
 
-    for(i = 0; i < tamanho; i++) //O deslocamento respeita o tipo de ponteiro porque o compilador sabe que um vetor tipo int ocupa 4 bytes na memória, então quando colocamos a instrução *(mapa + i), o compilador entende que é pra pular 4 bytes * i, indo para o próximo elemento do vetor.
-    {
-        printf("indice: %d\n endereco: %p\n valor: %d\n", i, (void*)(mapa + i), *(mapa + i));
-        altura = altura + *(mapa + i);
-        *ppontuacao = *ppontuacao + *(mapa + i);
-    }
+    explorar_mapa(mapa, tamanho, paltura, ppontuacao);
 
-    printf("Altura total: %d\n", altura);
-    printf("Pontuacao final: %d\n", *ppontuacao);
-
+    printf("Resumo do percurso: vida = %d, tesouro = %d, altura = %d, pontuacao = %d\n", *pvida, *ptesouro, *paltura, *ppontuacao);
+    
     return 0;
 }
