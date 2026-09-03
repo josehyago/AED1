@@ -1,5 +1,5 @@
 //Capítulo 2 — Cadastro dinâmico de jogadores e equipes
-//Atividade 10 - Cadrastro alocado em tempo de execução
+//Atividade 11 - Funções genéricas e liberação de memória
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -11,6 +11,19 @@
 #define TAMANHO_EQUIPE 50
 #define TAMANHO_LINHAS 5
 #define TAMANHO_COLUNAS 5
+
+void exibir_diagnostico(void *dado, char tipo){
+
+    if (tipo == 'i'){
+        int *valor_inteiro = (int *)dado;
+        printf("Valor inteiro recebido: %d\n", *valor_inteiro); 
+    }else if(tipo == 's'){
+        char *valor_string = (char *)dado;
+        printf("Texto recebido: %s\n", valor_string);
+    }else printf("Tipo de dado nao suportado\n");
+
+
+}
 
 void inicializar_mapa(int linhas, int colunas, int mapa[linhas][colunas])
 {
@@ -26,7 +39,7 @@ void posicionar_jogador(int linhas, int colunas, int quantidade, int mapa[linhas
     int il, ic;
 
     for(int i = 0; i < quantidade; i++) {
-        printf("Posicionando o Jogador %d: %s\n", i + 1, lista_jogadores[i]);
+        printf("\nPosicionando o Jogador %d: %s\n", i + 1, lista_jogadores[i]);
         printf("Digite as coordenadas (linha e coluna entre 0 e %d):\n", linhas - 1);
     
         while(1) {
@@ -50,7 +63,7 @@ void reposicionar_jogador(int linhas, int colunas, int quantidade, int mapa[linh
     int jogador, nova_linha, nova_coluna;
     int encontrado = 0;
 
-    printf("Reposicionar Jogador\n");
+    printf("\nReposicionar Jogador\n");
     printf("Digite o numero do jogador que deseja mover (1 a %d): ", quantidade);
     scanf("%d", &jogador);
 
@@ -88,7 +101,7 @@ void reposicionar_jogador(int linhas, int colunas, int quantidade, int mapa[linh
 
 void exibir_mapa(int linhas, int colunas, int mapa[linhas][colunas])
 {
-    printf("Mapa atual\n");
+    printf("\nMapa atual\n");
     for(int il = 0; il < linhas; il++){
         for(int ic = 0; ic < colunas; ic++){
             
@@ -111,33 +124,37 @@ int main()
     char apelido_busca[TAMANHO_NOME];
     int mapa[TAMANHO_LINHAS][TAMANHO_COLUNAS];
 
-    printf("Digite o nome da equipe: \n");
+    printf("Digite o nome da equipe: ");
     fgets(equipe, sizeof(equipe), stdin);
     equipe[strcspn(equipe, "\n")] = '\0';
 
-    printf("Digite a quantidade de jogadores da equipe: \n");
+    printf("Digite a quantidade de jogadores da equipe: ");
     
     while(1) {
     scanf("%d", &quantidade);
     getchar();
 
     if(quantidade > 0) break;
-    printf("Quantidade invalida. Digite um numero maior que zero: \n");
+    printf("\nQuantidade invalida. Digite um numero maior que zero: \n");
     }
 
     lista_jogadores = malloc(quantidade * sizeof(*lista_jogadores)); 
     // A vantagem de usar sizeof(*lista_jogadores) é que o compilador calcula automaticamente a quantidade de caracteres que foi definido no vetor, caso queira modificar, só será necessário mudar lá na declaração, assim evitando trocar nas duas linhas sempre.
 
     if (lista_jogadores == NULL) {
-    printf("Memoria insuficiente para alocar os jogadores.\n");
+    printf("\nMemoria insuficiente para alocar os jogadores.");
     return 1;
     }
+
+    printf("\nFerramenta de Diagnostico\n");
+    exibir_diagnostico(&quantidade, 'i');
+    exibir_diagnostico(equipe, 's');
     
     for(a = 0; a < quantidade; a++){
 
-        printf("Cadastro do Jogador %d\n", a + 1);
+        printf("\nCadastro do Jogador %d\n", a + 1);
 
-        printf("Digite o nome completo do jogador %d: \n", a + 1);
+        printf("Digite o nome completo do jogador %d: ", a + 1);
         fgets(nome, sizeof(nome), stdin);
         nome[strcspn(nome, "\n")] = '\0'; //Substitui o '\n' por '\0'
 
@@ -145,7 +162,7 @@ int main()
         {
             erro = 0;
         
-            printf("Digite o apelido do jogador %d: \n", a + 1);
+            printf("Digite o apelido do jogador %d: ", a + 1);
             fgets(apelido, sizeof(apelido), stdin);
             apelido[strcspn(apelido, "\n")] = '\0';
 
@@ -171,7 +188,7 @@ int main()
         {
             erro = 0;
 
-            printf("Digite a senha do jogador %d: \n", a + 1);
+            printf("Digite a senha do jogador %d: ", a + 1);
             fgets(senha, sizeof(senha), stdin);
             senha[strcspn(senha, "\n")] = '\0';
 
@@ -196,7 +213,7 @@ int main()
         {
             erro = 0;
 
-            printf("Confirme a sua senha: \n");
+            printf("Confirme a sua senha: ");
             fgets(confirmacao, sizeof(confirmacao), stdin);
             confirmacao[strcspn(confirmacao, "\n")] = '\0';
         
@@ -216,14 +233,14 @@ int main()
             printf("Erro: O tamanho do nome da equipe e do apelido excede o limite permitido\n");
     }
 }
-        printf("Cadastro concluido com sucesso!\n");
+        printf("\nCadastro concluido com sucesso!\n");
         
-        printf("Lista de jogadores: \n");
+        printf("\nLista de jogadores: \n");
         for(a = 0; a < quantidade; a++){
             printf("Jogador %d: %s\n", a + 1, lista_jogadores[a]);
         }
         
-        printf("Digite um jogador para buscar (Apelido - Equipe):\n");
+        printf("\nDigite um jogador para buscar (Apelido - Equipe): ");
         fgets(apelido_busca, sizeof(apelido_busca), stdin);
         apelido_busca[strcspn(apelido_busca, "\n")] = '\0';
 
@@ -250,6 +267,7 @@ int main()
     exibir_mapa(linhas, colunas, mapa);
 
     free(lista_jogadores);
+    lista_jogadores = NULL;
 
     return 0;
 }
