@@ -1,5 +1,5 @@
 //Capítulo 2 — Cadastro dinâmico de jogadores e equipes
-//Atividade 8 - Cópia, concatenação e lista de nomes
+//Atividade 9 - Mapa matricial da equipe
 #include <stdio.h>
 #include <string.h>
 
@@ -8,12 +8,106 @@
 #define TAMANHO_APELIDO 30
 #define TAMANHO_SENHA 16
 #define TAMANHO_EQUIPE 50
+#define TAMANHO_LINHAS 5
+#define TAMANHO_COLUNAS 5
+
+void inicializar_mapa(int linhas, int colunas, int mapa[linhas][colunas])
+{
+    for(int il = 0; il < linhas; il++){
+        for(int ic = 0; ic < colunas; ic++){
+            mapa[il][ic] = -1;
+        }
+    }
+}
+
+void posicionar_jogador(int linhas, int colunas, int mapa[linhas][colunas], char lista_jogadores[5][80]){
+    
+    int il, ic;
+
+    for(int i = 0; i < 5; i++) {
+        printf("Posicionando o Jogador %d: %s\n", i + 1, lista_jogadores[i]);
+        printf("Digite as coordenadas (linha e coluna entre 0 e %d):\n", linhas - 1);
+    
+        while(1) {
+            scanf("%d %d", &il, &ic);
+            
+            if(il >= linhas || il < 0 || ic >= colunas || ic < 0){
+                printf("Erro: Coordenadas fora do limite do mapa. Tente novamente:\n");
+            } 
+            else if(mapa[il][ic] != -1) {
+                printf("Erro: Ja esta ocupada por outro jogador. Tente outra:\n");
+            } 
+            else {
+                mapa[il][ic] = i + 1; 
+                break;
+            }
+        }
+    }
+}
+
+void reposicionar_jogador(int linhas, int colunas, int mapa[linhas][colunas]){
+    int jogador, nova_linha, nova_coluna;
+    int encontrado = 0;
+
+    printf("Reposicionar Jogador\n");
+    printf("Digite o numero do jogador que deseja mover (1 a 5): ");
+    scanf("%d", &jogador);
+
+    for(int il = 0; il < linhas; il++) {
+        for(int ic = 0; ic < colunas; ic++) {
+            if(mapa[il][ic] == jogador) {
+                mapa[il][ic] = -1;
+                encontrado = 1;
+            }
+        }
+    }
+
+    if(encontrado == 0) {
+        printf("Aviso: Esse jogador nao foi encontrado em nenhuma posicao do mapa.\n");
+        return;
+    }
+
+    printf("Digite as novas coordenadas (linha e coluna) para o Jogador %d:\n", jogador);
+    while(1) {
+        scanf("%d %d", &nova_linha, &nova_coluna);
+
+        if(nova_linha >= linhas || nova_linha < 0 || nova_coluna >= colunas || nova_coluna < 0) {
+            printf("Erro: Coordenadas invalidas. Tente novamente:\n");
+        } 
+        else if(mapa[nova_linha][nova_coluna] != -1) {
+            printf("Erro: Essa posicao ja esta ocupada. Escolha outra:\n");
+        } 
+        else {
+            mapa[nova_linha][nova_coluna] = jogador;
+            printf("Jogador reposicionado com sucesso.\n");
+            break;
+        }
+    }
+}
+
+void exibir_mapa(int linhas, int colunas, int mapa[linhas][colunas])
+{
+    printf("Mapa atual\n");
+    for(int il = 0; il < linhas; il++){
+        for(int ic = 0; ic < colunas; ic++){
+            
+            if(mapa[il][ic] == -1){ 
+                printf("[ ~ ]");
+            }else{
+                printf("[Jogador %d ]", mapa[il][ic]);}      
+        }
+        printf("\n");
+    }
+}
 
 int main()
 {
     char nome[TAMANHO_NOME], apelido[TAMANHO_APELIDO], senha[TAMANHO_SENHA], confirmacao[TAMANHO_SENHA], equipe[TAMANHO_EQUIPE];
     int erro, i, a, tamanho_necessario, encontrado;
+    int linhas = TAMANHO_LINHAS;
+    int colunas = TAMANHO_COLUNAS;
     char lista_jogadores[5][80], apelido_busca[TAMANHO_NOME];
+    int mapa[TAMANHO_LINHAS][TAMANHO_COLUNAS];
     
     printf("Digite o nome da equipe: \n");
     fgets(equipe, sizeof(equipe), stdin);
@@ -125,6 +219,15 @@ int main()
     } else {
         printf("Esse jogador nao esta na lista.\n");
     }
+
+    inicializar_mapa(linhas, colunas, mapa);
+    exibir_mapa(linhas, colunas, mapa);
+
+    posicionar_jogador(linhas, colunas, mapa, lista_jogadores);
+    exibir_mapa(linhas, colunas, mapa);
+
+    reposicionar_jogador(linhas, colunas, mapa);
+    exibir_mapa(linhas, colunas, mapa);
 
     return 0;
 }
