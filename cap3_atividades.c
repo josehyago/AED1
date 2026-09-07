@@ -1,15 +1,15 @@
 // Capítulo 3 — Catalágo dinâmico de personagens
-// Atividade 15 - Definição e alteração de personagens
+// Atividade 16 - Inicialização e atualização de membros textuais
 
-// Contexto: Uma pontuação isolada não é suficiente para representar um personagem. O catálogo deve agrupar em um único registro todos os dados que descrevem cada participante do jogo.
-// Descrição detalhada: Defina uma estrutura com identificador, nome, vida, pontuação e posição. Crie um personagem de exemplo, mostre seus dados e realize alterações controladas. O objetivo é observar como membros de tipos diferentes formam uma única unidade lógica.
+// Contexto: A criação manual de cada registro aumenta a chance de deixar campos sem valor. Além disso, o nome do personagem pode mudar durante o jogo, mas deve permanecer dentro do espaço reservado.
+// Descrição detalhada: Padronize a inicialização dos registros na declaração e por meio de uma função que devolva um personagem completamente preenchido. Implemente também uma operação segura para trocar o nome, cuidando da entrada e do limite do vetor de caracteres.
 // Requisitos:
-// - declarar a struct antes das funções que a utilizam;
-// - criar e preencher ao menos um personagem;
-// - acessar membros com o operador ponto;
-// - alterar vida, pontuação e posição;
-// - exibir o estado antes e depois;
-// - preservar valores dentro de limites coerentes.
+// - demonstrar inicialização posicional ou designada;
+// - criar uma função construtora de Personagem;
+// - inicializar todos os membros;
+// - ler o novo nome com segurança;
+// - validar ou limitar a cópia do texto;
+// - exibir o registro completo após a alteração.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,9 +24,29 @@ struct Catalogo{
     float posicao_y;
 };
 
+struct Catalogo construir_personagem(int id, char *nome, int vida, int pontuacao, float posicao_x, float posicao_y){
+    struct Catalogo novo_personagem;
+    
+    novo_personagem.id = id;
+
+    strncpy(novo_personagem.nome, nome, sizeof(novo_personagem.nome) - 1);
+    novo_personagem.nome[sizeof(novo_personagem.nome) - 1] = '\0';
+
+    novo_personagem.vida = vida;
+    novo_personagem.pontuacao = pontuacao;
+    novo_personagem.posicao_x = posicao_x;
+    novo_personagem.posicao_y = posicao_y;
+
+    return novo_personagem;
+}
+
 int main(){
     int capacidade, capacidade_nova, i;
     capacidade = 5;
+    char nome_novo[50];
+
+    struct Catalogo exemplo = {0, "Inicializacao posicional ou designada", 100, 0, 0.0, 0.0};
+    (void)exemplo;
 
     struct Catalogo *personagem = (struct Catalogo *) calloc(capacidade, sizeof(struct Catalogo));
 
@@ -35,12 +55,7 @@ int main(){
         exit (1);
     }
 
-    personagem[0].id = 1;
-    strcpy(personagem[0].nome, "Hyago");
-    personagem[0].vida = 80;
-    personagem[0].pontuacao = 0;
-    personagem[0].posicao_x = 10.5;
-    personagem[0].posicao_y = 5.0;
+    personagem[0] = construir_personagem(1, "Hyago", 80, 0, 10.5, 5.0);
 
     printf("\nEstado Inicial: \n");
     printf("ID: %d | Nome: %s | Vida: %d | Pontos: %d | Posicao: (%.2f, %.2f)\n", personagem[0].id, personagem[0].nome, personagem[0].vida, personagem[0].pontuacao, personagem[0].posicao_x, personagem[0].posicao_y);
@@ -66,6 +81,7 @@ int main(){
 
     printf("Digite a nova capacidade: ");
     scanf("%d", &capacidade_nova);
+    getchar();
 
     if(capacidade_nova <= 0){
         printf("Capacidade invalida.");
@@ -84,16 +100,21 @@ int main(){
 
         if (capacidade_nova > capacidade) {
         for (i = capacidade; i < capacidade_nova; i++) {
-            personagem[i].id = 0;
-            personagem[i].nome[0] = '\0';
-            personagem[i].vida = 0;
-            personagem[i].pontuacao = 0;
-            personagem[i].posicao_x = 0.0;
-            personagem[i].posicao_y = 0.0;
+            personagem[i] = construir_personagem(0, "", 0, 0, 0.0, 0.0);
         }
     }
 
         printf("Capacidade Anterior = %d | Capacidade Nova = %d\n", capacidade, capacidade_nova);
+
+        printf("\nDigite o novo nome para o personagem 1: ");
+        fgets(nome_novo, sizeof(nome_novo), stdin);
+        nome_novo[strcspn(nome_novo, "\n")] = '\0';
+
+        strncpy(personagem[0].nome, nome_novo, sizeof(personagem[0].nome) - 1);
+        personagem[0].nome[sizeof(personagem[0].nome) - 1] = '\0';
+
+        printf("\nRegistro Apos Alteracao: \n");
+        printf("ID: %d | Nome: %s | Vida: %d | Pontos: %d | Posicao: (%.2f, %.2f)\n", personagem[0].id, personagem[0].nome, personagem[0].vida, personagem[0].pontuacao, personagem[0].posicao_x, personagem[0].posicao_y);
 
     free(personagem);
     personagem = NULL;
