@@ -1,58 +1,102 @@
-//Capítulo 3 — Catalágo dinâmico de personagens
-//Atividade 15 - Definição e alteração de personagens
+// Capítulo 3 — Catalágo dinâmico de personagens
+// Atividade 15 - Definição e alteração de personagens
+
+// Contexto: Uma pontuação isolada não é suficiente para representar um personagem. O catálogo deve agrupar em um único registro todos os dados que descrevem cada participante do jogo.
+// Descrição detalhada: Defina uma estrutura com identificador, nome, vida, pontuação e posição. Crie um personagem de exemplo, mostre seus dados e realize alterações controladas. O objetivo é observar como membros de tipos diferentes formam uma única unidade lógica.
+// Requisitos:
+// - declarar a struct antes das funções que a utilizam;
+// - criar e preencher ao menos um personagem;
+// - acessar membros com o operador ponto;
+// - alterar vida, pontuação e posição;
+// - exibir o estado antes e depois;
+// - preservar valores dentro de limites coerentes.
+
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-struct jogador {
+struct Catalogo{
     int id;
-    char nome[20];
+    char nome[50];
     int vida;
     int pontuacao;
-    int posicao;
+    float posicao_x;
+    float posicao_y;
 };
 
-void exibirEstado(struct jogador j)
-{
-    printf("ID: %d | Nome: %s | Vida: %d | Pontuacao: %d | Posicao: %d\n", j.id, j.nome, j.vida, j.pontuacao, j.posicao);
-}
-
-void ganho_vida(int *vida)
-{
-    *vida = *vida + 5;
-    if(*vida > 100){
-        *vida = 100;
-    }
-}
-
-void altera_pontuacao_posicao(int *pontuacao, int *posicao)
-{
-    *pontuacao = *pontuacao + 50;
-    *posicao = *posicao + 1;
-}
-
 int main(){
-    struct jogador j;
+    int capacidade, capacidade_nova, i;
+    capacidade = 5;
 
-    printf("Digite o ID do jogador: ");
-    scanf("%d", &j.id);
-    getchar();
+    struct Catalogo *personagem = (struct Catalogo *) calloc(capacidade, sizeof(struct Catalogo));
+
+    if(personagem == NULL){
+        printf("Nao ha memoria suficiente");
+        exit (1);
+    }
+
+    personagem[0].id = 1;
+    strcpy(personagem[0].nome, "Hyago");
+    personagem[0].vida = 80;
+    personagem[0].pontuacao = 0;
+    personagem[0].posicao_x = 10.5;
+    personagem[0].posicao_y = 5.0;
+
+    printf("\nEstado Inicial: \n");
+    printf("ID: %d | Nome: %s | Vida: %d | Pontos: %d | Posicao: (%.2f, %.2f)\n", personagem[0].id, personagem[0].nome, personagem[0].vida, personagem[0].pontuacao, personagem[0].posicao_x, personagem[0].posicao_y);
+
+    printf("Aplicando item de cura (+50 de vida)\n");
+    personagem[0].vida += 50; 
     
-    printf("Digite o nome do jogador: ");
-    fgets(j.nome, sizeof(j.nome), stdin);
-    j.nome[strcspn(j.nome, "\n")] = '\0';
-    
-    printf("Digite a vida, pontuacao e posicao: ");
-    scanf("%d %d %d", &j.vida, &j.pontuacao, &j.posicao);
+    printf("Aplicando pontuacao (+300 pontos)\n");
+    personagem[0].pontuacao += 300;
 
-    printf("\nEstado anterior:\n");
-    exibirEstado(j);
+    printf("Personagem andou para frente (+2 no eixo x)\n");
+    personagem[0].posicao_x += 2.0;
 
-    printf("\nAplicando alteracoes.");
-    ganho_vida(&j.vida);
-    altera_pontuacao_posicao(&j.pontuacao, &j.posicao);
+    if (personagem[0].vida > 100){
+        personagem[0].vida = 100;
+    }
+    if (personagem[0].pontuacao < 0){
+        personagem[0].pontuacao = 0;
+    }
 
-    printf("\nEstado Atual\n");
-    exibirEstado(j);
+    printf("Estado apos eventos: \n");
+    printf("ID: %d | Nome: %s | Vida: %d | Pontos: %d | Posicao: (%.2f, %.2f)\n", personagem[0].id, personagem[0].nome, personagem[0].vida, personagem[0].pontuacao, personagem[0].posicao_x, personagem[0].posicao_y);
+
+    printf("Digite a nova capacidade: ");
+    scanf("%d", &capacidade_nova);
+
+    if(capacidade_nova <= 0){
+        printf("Capacidade invalida.");
+        free(personagem);
+        exit(1);
+    }
+
+        struct Catalogo *personagem_temporario = (struct Catalogo *) realloc(personagem, capacidade_nova * sizeof(struct Catalogo));
+
+        if (personagem_temporario == NULL){
+        printf("Nao ha memoria suficiente para realocar.\n");
+        free(personagem);
+        exit(1);
+    }
+        personagem = personagem_temporario;
+
+        if (capacidade_nova > capacidade) {
+        for (i = capacidade; i < capacidade_nova; i++) {
+            personagem[i].id = 0;
+            personagem[i].nome[0] = '\0';
+            personagem[i].vida = 0;
+            personagem[i].pontuacao = 0;
+            personagem[i].posicao_x = 0.0;
+            personagem[i].posicao_y = 0.0;
+        }
+    }
+
+        printf("Capacidade Anterior = %d | Capacidade Nova = %d\n", capacidade, capacidade_nova);
+
+    free(personagem);
+    personagem = NULL;
 
     return 0;
 }
