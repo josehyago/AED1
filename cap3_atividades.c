@@ -1,15 +1,15 @@
 // Capítulo 3 — Catalágo dinâmico de personagens
-// Atividade 17 - Tipos próprios e passagens por valor
+// Atividade 18 - Alteração por ponteiro e operador seta
 
-// Contexto: As funções do catálogo precisam de assinaturas mais legíveis. Algumas delas servem apenas para consultar dados e podem trabalhar sobre uma cópia sem alterar o registro armazenado.
-// Descrição detalhada: Crie o tipo Personagem com typedef e implemente funções de consulta que recebam a estrutura por valor. Faça uma alteração intencional na cópia local e mostre que o personagem existente na main continua igual.
+// Contexto: Operações como receber dano, avançar no mapa e ganhar pontos devem afetar o personagem realmente armazenado, não uma cópia descartada ao término da função.
+// Descrição detalhada: Implemente versões modificadoras que recebam Personagem *. Use o operador seta para atualizar os campos e compare essa sintaxe com (*ponteiro).membro. As funções deverão rejeitar ponteiro nulo e valores incompatíveis com as regras do catálogo.
 // Requisitos:
-// - substituir usos externos de struct pelo nome definido no typedef;
-// - criar ao menos duas funções que recebam Personagem por valor;
-// - calcular ou exibir dados sem modificar o original;
-// - alterar a cópia dentro de uma função de demonstração;
-// - comparar os estados interno e externo;
-// - comentar o efeito e o custo da cópia.
+// - criar funções para vida, posição e pontuação;
+// - acessar membros principalmente com ->;
+// - impedir vida negativa ou superior ao máximo definido;
+// - validar ponteiro nulo;
+// - demonstrar ao menos uma expressão equivalente com (*p).membro;
+// - confirmar as alterações após o retorno das funções.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,24 +24,14 @@ typedef struct{
     float posicao_y;
 } Personagem;
 
-Personagem construir_personagem(int id, char *nome, int vida, int pontuacao, float posicao_x, float posicao_y){
-    Personagem novo_personagem;
-    
-    novo_personagem.id = id;
-
-    strncpy(novo_personagem.nome, nome, sizeof(novo_personagem.nome) - 1);
-    novo_personagem.nome[sizeof(novo_personagem.nome) - 1] = '\0';
-
-    novo_personagem.vida = vida;
-    novo_personagem.pontuacao = pontuacao;
-    novo_personagem.posicao_x = posicao_x;
-    novo_personagem.posicao_y = posicao_y;
-
-    return novo_personagem;
-}
-
+Personagem construir_personagem(int id, char *nome, int vida, int pontuacao, float posicao_x, float posicao_y);
 void exibir_personagem(Personagem personagem);
+
 void simular_dano(Personagem personagem);
+
+void vida(Personagem *personagem, int quantidade);
+void pontuacao(Personagem *personagem, int quantidade);
+void posicao(Personagem *personagem, float posx, float posy);
 
 int main(){
     int capacidade, capacidade_nova, i;
@@ -63,21 +53,9 @@ int main(){
     printf("\nEstado Inicial (Externo): \n");
     exibir_personagem(personagem[0]);
 
-    printf("Aplicando item de cura (+50 de vida)\n");
-    personagem[0].vida += 50; 
-    
-    printf("Aplicando pontuacao (+300 pontos)\n");
-    personagem[0].pontuacao += 300;
-
-    printf("Personagem andou para frente (+2 no eixo x)\n");
-    personagem[0].posicao_x += 2.0;
-
-    if (personagem[0].vida > 100){
-        personagem[0].vida = 100;
-    }
-    if (personagem[0].pontuacao < 0){
-        personagem[0].pontuacao = 0;
-    }
+    vida(&personagem[0], 50);
+    pontuacao(&personagem[0], 300);
+    posicao(&personagem[0], 2.0, 0.0);
 
     printf("Estado apos eventos: \n");
     exibir_personagem(personagem[0]);
@@ -89,7 +67,7 @@ int main(){
     // Efeito e Custo da Cópia (Passagem por Valor): O efeito positivo é a segurança: a função trabalha com um clone dos dados, garantindo que o registro original no main não seja alterado acidentalmente. 
     // O custo é a performance e memória: a cada chamada da função, o programa precisa alocar espaço e copiar todos os bytes da estrutura (int, char[50], floats). Em estruturas muito grandes ou em chamadas frequentes, isso consome muito processamento, sendo preferível usar ponteiros.
 
-    printf("Digite a nova capacidade: ");
+    printf("\nDigite a nova capacidade: ");
     scanf("%d", &capacidade_nova);
     getchar();
 
@@ -132,6 +110,22 @@ int main(){
     return 0;
 }
 
+Personagem construir_personagem(int id, char *nome, int vida, int pontuacao, float posicao_x, float posicao_y){
+    Personagem novo_personagem;
+    
+    novo_personagem.id = id;
+
+    strncpy(novo_personagem.nome, nome, sizeof(novo_personagem.nome) - 1);
+    novo_personagem.nome[sizeof(novo_personagem.nome) - 1] = '\0';
+
+    novo_personagem.vida = vida;
+    novo_personagem.pontuacao = pontuacao;
+    novo_personagem.posicao_x = posicao_x;
+    novo_personagem.posicao_y = posicao_y;
+
+    return novo_personagem;
+}
+
 void exibir_personagem(Personagem personagem){
     printf("ID: %d | Nome: %s | Vida: %d | Pontos: %d | Posicao: (%.2f, %.2f)\n", 
            personagem.id, personagem.nome, personagem.vida, personagem.pontuacao, personagem.posicao_x, personagem.posicao_y);
@@ -143,6 +137,43 @@ void simular_dano(Personagem personagem){
     
     personagem.vida -= 30; 
     
-    printf("Estado Interno (Copia): ");
+    printf("Estado Interno (Copia): \n");
     exibir_personagem(personagem);
+}
+
+void vida(Personagem *personagem, int quantidade){
+    if(personagem == NULL) return;
+    
+    personagem->vida += quantidade;
+
+    if(quantidade < 0) printf("Seu personagem sofreu %d de dano\n", quantidade);
+    if(quantidade > 0) printf("Seu personagem ganhou %d de vida\n", quantidade);
+
+    if (personagem->vida > 100) personagem->vida = 100;
+    else if (personagem->vida < 0) personagem->vida = 0;
+}
+
+void pontuacao(Personagem *personagem, int quantidade){
+    if(personagem == NULL) return;
+    
+    personagem->pontuacao += quantidade;
+
+    if(quantidade > 0) printf("Seu personagem ganhou %d de pontuacao\n", quantidade);
+    if(quantidade < 0) printf("Seu personagem perdeu %d de pontuacao\n", quantidade);
+
+    if (personagem->pontuacao < 0) personagem->pontuacao = 0;
+}
+
+void posicao(Personagem *personagem, float posx, float posy){
+    if(personagem == NULL) return;
+
+    if(posx != 0 || posy != 0){
+    (*personagem).posicao_x += posx; //Equivalência com (->)
+    personagem->posicao_y += posy;
+    }
+
+    if(posx > 0) printf("Seu personagem andou pra frente (+%2.0f no eixo x)\n", posx);
+    if(posx < 0) printf("Seu personagem andou pra tras (-%2.0f no eixo x)\n", posx);
+    if(posy > 0) printf("Seu personagem pulou pra cima (+%2.0f no eixo y)\n", posy);
+    if(posy < 0) printf("Seu personagem pulou pra baixo (-%2.0f no eixo y)\n", posy);
 }
