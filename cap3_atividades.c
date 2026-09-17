@@ -1,139 +1,147 @@
 // Capítulo 3 — Catalágo dinâmico de personagens
-// Atividade 19 — Equipe como vetor dinâmico de estruturas
+// Atividade 20 — Estruturas aninhadas e enumerações
 
-// Contexto: O catálogo precisa deixar de tratar apenas um personagem e passar a administrar uma equipe inteira, cuja quantidade pode crescer durante a execução.
-// Descrição detalhada: Transforme o armazenamento preparado na A…4438 tokens truncated…*Descrição detalhada: Implemente uma função que receba dois vetores ordenados e produza um terceiro também ordenado. Em seguida, crie a estrutura recursiva que divide um intervalo em duas metades, ainda que a ordenação completa seja concluída na próxima atividade.
+// Contexto: O modelo do catálogo precisa expressar melhor os conceitos do domínio. Coordenadas formam uma posição, personagens pertencem a equipes e estados como classe ou nível devem usar valores nomeados em vez de números soltos.
+// Descrição detalhada: Finalize o capítulo reorganizando os tipos. Crie Posicao, incorpore-a em Personagem, defina Equipe e represente uma classificação com enum. Atualize as funções anteriores para trabalhar com o novo modelo sem perder recursos já implementados.
 // Requisitos:
-// - manter índices independentes para as duas entradas;
-// - copiar os elementos restantes quando uma entrada terminar;
-// - produzir saída com todos os valores;
-// - calcular corretamente o ponto médio;
-// - identificar em comentários as etapas dividir, resolver e combinar;
-// - contar comparações da intercalação.
+// - aninhar Posicao em Personagem;
+// - criar uma estrutura que represente a equipe e seu catálogo;
+// - definir um enum para classe, estado ou nível;
+// - converter os valores enumerados em textos legíveis;
+// - atualizar cadastro, busca, alteração e listagem;
+// - disponibilizar todas as operações em um menu integrado.
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+typedef enum {
+    INICIANTE = 0,
+    INTERMEDIARIO,
+    AVANCADO,
+    MESTRE
+} Nivel;
+
+typedef struct {
+    float x;
+    float y;
+} Posicao;
 
 typedef struct{
     int id;
     char nome[50];
     int vida;
     int pontuacao;
-    float posicao_x;
-    float posicao_y;
+    Posicao pos;
+    Nivel nivel;
 } Personagem;
 
-Personagem construir_personagem(int id, char *nome, int vida, int pontuacao, float posicao_x, float posicao_y);
-void exibir_personagem(Personagem personagem);
+typedef struct {
+    Personagem *membros;
+    int capacidade;
+    int tamanho_atual;
+} Equipe;
 
-void simular_dano(Personagem personagem);
+char* obter_nome_nivel(Nivel nivel);
 
-void vida(Personagem *personagem, int quantidade);
-void pontuacao(Personagem *personagem, int quantidade);
-void posicao(Personagem *personagem, float posx, float posy);
+Personagem construir_personagem(int id, char *nome, int vida, int pontuacao, float posicao_x, float posicao_y, Nivel nivel);
+void cadastrar_personagem(Equipe *equipe);
+void inicializar_equipe(Equipe *equipe, int capacidade_inicial);
+void exibir_equipe(Equipe *equipe);
+void alterar_personagem(Equipe *equipe);
+
+int buscar_personagem_por_id(Equipe *equipe, int id);
 
 void intercalar(Personagem *vetor, int inicio, int meio, int fim, int *comparacoes);
 void merge_sort(Personagem *vetor, int inicio, int fim, int *comparacoes);
 
+void ordenar_equipe(Equipe *equipe);
+void liberar_equipe(Equipe *equipe);
+
 int main(){
-    int capacidade, capacidade_nova, comparacoes, i;
-    capacidade = 5;
-    comparacoes = 0;
-    char nome_novo[50];
+    Equipe equipe;
+    inicializar_equipe(&equipe, 5);
 
-    Personagem exemplo = {0, "Inicializacao posicional ou designada", 100, 0, 0.0, 0.0};
-    (void)exemplo;
+    equipe.membros[0] = construir_personagem(3, "Hyago", 80, 0, 10.5, 5.0, INTERMEDIARIO);
+    equipe.membros[1] = construir_personagem(4, "Margarida", 100, 800, 5.0, 3.0, MESTRE);
+    equipe.membros[2] = construir_personagem(2, "Gabriel", 85, 600, 2.0, 4.0, AVANCADO);
+    equipe.membros[3] = construir_personagem(1, "Ana Paula", 95, 750, 4.0, 1.0, INICIANTE);
+    equipe.membros[4] = construir_personagem(5, "Samuel", 40, 200, 6.0, 5.0, AVANCADO);
+    equipe.tamanho_atual = 5;
 
-    Personagem *personagem = (Personagem *) calloc(capacidade, sizeof(Personagem));
+    int opcao = -1;
+    do{
+        printf("CATALOGO DINAMICO DE PERSONAGENS\n");
+        printf("\n");
+        printf("1. Cadastrar Personagem\n");
+        printf("2. Exibir Equipe\n");
+        printf("3. Buscar Personagem por ID\n");
+        printf("4. Alterar Dados de um Personagem\n");
+        printf("5. Ordenar Equipe por ID (Merge Sort)\n");
+        printf("0. Sair\n");
+        printf("Escolha uma opcao: ");
 
-    if(personagem == NULL){
-        printf("Nao ha memoria suficiente");
-        exit (1);
-    }
-
-    personagem[0] = construir_personagem(3, "Hyago", 80, 0, 10.5, 5.0);
-    personagem[1] = construir_personagem(4, "Margarida", 100, 800, 5.0, 3.0);
-    personagem[2] = construir_personagem(2, "Gabriel", 85, 600, 2.0, 4.0);
-    personagem[3] = construir_personagem(1, "Ana Paula", 95, 750, 4.0, 1.0);
-    personagem[4] = construir_personagem(5, "Samuel", 40, 200, 6.0, 5.0);
-
-    printf("\nEstado Inicial (Externo): \n");
-    exibir_personagem(personagem[0]);
-
-    vida(&personagem[0], 50);
-    pontuacao(&personagem[0], 300);
-    posicao(&personagem[0], 2.0, 0.0);
-
-    printf("Estado apos eventos: \n");
-    exibir_personagem(personagem[0]);
-
-    simular_dano(personagem[0]);
-    printf("\nEstado Externo apos a funcao:\n");
-    exibir_personagem(personagem[0]);
-
-    // Efeito e Custo da Cópia (Passagem por Valor): O efeito positivo é a segurança: a função trabalha com um clone dos dados, garantindo que o registro original no main não seja alterado acidentalmente. 
-    // O custo é a performance e memória: a cada chamada da função, o programa precisa alocar espaço e copiar todos os bytes da estrutura (int, char[50], floats). Em estruturas muito grandes ou em chamadas frequentes, isso consome muito processamento, sendo preferível usar ponteiros.
-
-    printf("\nEquipe antes da ordenacao:\n");
-    for (int i = 0; i < capacidade; i++) {
-        exibir_personagem(personagem[i]);
-    }
-
-    merge_sort(personagem, 0, capacidade - 1, &comparacoes);
-
-    printf("\nEquipe apos Merge Sort (Ordenada por ID):\n");
-    for (int i = 0; i < capacidade; i++) {
-        exibir_personagem(personagem[i]);
-    }
-
-    printf("\nTotal de comparacoes realizadas na intercalacao: %d\n", comparacoes);
-
-    printf("\nDigite a nova capacidade: ");
-    scanf("%d", &capacidade_nova);
-    getchar();
-
-    if(capacidade_nova <= 0){
-        printf("Capacidade invalida.");
-        free(personagem);
-        exit(1);
-    }
-
-        Personagem *personagem_temporario = (Personagem *) realloc(personagem, capacidade_nova * sizeof(Personagem));
-
-        if (personagem_temporario == NULL){
-        printf("Nao ha memoria suficiente para realocar.\n");
-        free(personagem);
-        exit(1);
-    }
-        personagem = personagem_temporario;
-
-        if (capacidade_nova > capacidade) {
-        for (i = capacidade; i < capacidade_nova; i++) {
-            personagem[i] = construir_personagem(0, "", 0, 0, 0.0, 0.0);
+        if (scanf("%d", &opcao) != 1){
+            while (getchar() != '\n');
+            printf("Opcao invalida!\n");
+            continue;
         }
-    }
+        getchar();
 
-        printf("Capacidade Anterior = %d | Capacidade Nova = %d\n", capacidade, capacidade_nova);
-        capacidade = capacidade_nova;
+        switch (opcao){
+            case 1:
+                cadastrar_personagem(&equipe);
+                break;
+            case 2:
+                exibir_equipe(&equipe);
+                break;
+            case 3:{
+                int id;
+                printf("\nDigite o ID para busca: ");
+                scanf("%d", &id);
+                getchar();
+                int idx = buscar_personagem_por_id(&equipe, id);
+                if (idx != -1){
+                    Personagem personagem = equipe.membros[idx];
+                    printf("\nPersonagem encontrado:\n");
+                    printf("ID: %d | Nome: %s | Vida: %d | Pontos: %d | Pos: (%.2f, %.2f) | Nivel: %s\n",
+                           personagem.id, personagem.nome, personagem.vida, personagem.pontuacao, personagem.pos.x, personagem.pos.y, obter_nome_nivel(personagem.nivel));
+                }else{
+                    printf("Personagem com ID %d nao encontrado.\n", id);
+                }
+                break;
+            }
+            case 4:
+                alterar_personagem(&equipe);
+                break;
+            case 5:
+                ordenar_equipe(&equipe);
+                break;
+            case 0:
+                printf("\nEncerrando o sistema...\n");
+                break;
+            default:
+                printf("Opcao invalida! Tente novamente.\n");
+        }
+    }while (opcao != 0);
 
-        printf("\nDigite o novo nome para o personagem 1: ");
-        fgets(nome_novo, sizeof(nome_novo), stdin);
-        nome_novo[strcspn(nome_novo, "\n")] = '\0';
+    liberar_equipe(&equipe);
 
-        strncpy(personagem[0].nome, nome_novo, sizeof(personagem[0].nome) - 1);
-        personagem[0].nome[sizeof(personagem[0].nome) - 1] = '\0';
-
-        printf("\nRegistro Apos Alteracao: \n");
-        exibir_personagem(personagem[0]);
-
-    free(personagem);
-    personagem = NULL;
 
     return 0;
 }
 
-Personagem construir_personagem(int id, char *nome, int vida, int pontuacao, float posicao_x, float posicao_y){
+char* obter_nome_nivel(Nivel nivel){
+    switch (nivel){
+        case INICIANTE:     return "Iniciante";
+        case INTERMEDIARIO: return "Intermediario";
+        case AVANCADO:      return "Avancado";
+        case MESTRE:        return "Mestre";
+        default:            return "Desconhecido";
+    }
+}
+
+Personagem construir_personagem(int id, char *nome, int vida, int pontuacao, float posicao_x, float posicao_y, Nivel nivel){
     Personagem novo_personagem;
     
     novo_personagem.id = id;
@@ -141,64 +149,145 @@ Personagem construir_personagem(int id, char *nome, int vida, int pontuacao, flo
     strncpy(novo_personagem.nome, nome, sizeof(novo_personagem.nome) - 1);
     novo_personagem.nome[sizeof(novo_personagem.nome) - 1] = '\0';
 
-    novo_personagem.vida = vida;
-    novo_personagem.pontuacao = pontuacao;
-    novo_personagem.posicao_x = posicao_x;
-    novo_personagem.posicao_y = posicao_y;
+    novo_personagem.vida = (vida > 100) ? 100 : ((vida < 0) ? 0 : vida);
+    novo_personagem.pontuacao = (pontuacao < 0) ? 0 : pontuacao;
+    novo_personagem.pos.x = posicao_x;
+    novo_personagem.pos.y = posicao_y;
+    novo_personagem.nivel = nivel;
 
     return novo_personagem;
 }
 
-void exibir_personagem(Personagem personagem){
-    printf("ID: %d | Nome: %s | Vida: %d | Pontos: %d | Posicao: (%.2f, %.2f)\n", 
-           personagem.id, personagem.nome, personagem.vida, personagem.pontuacao, personagem.posicao_x, personagem.posicao_y);
+void inicializar_equipe(Equipe *equipe, int capacidade_inicial){
+    equipe->capacidade = capacidade_inicial;
+    equipe->tamanho_atual = 0;
+    equipe->membros = (Personagem *) calloc(equipe->capacidade, sizeof(Personagem));
+    if (equipe->membros == NULL){
+        printf("Erro: Falha na alocacao de memoria inicial.\n");
+        exit(1);
+    }
 }
 
-void simular_dano(Personagem personagem){
-    printf("\nDentro da funcao simular_dano:\n");
-    printf("O personagem sofreu um ataque.\n");
-    
-    personagem.vida -= 30; 
-    
-    printf("Estado Interno (Copia): \n");
-    exibir_personagem(personagem);
-}
-
-void vida(Personagem *personagem, int quantidade){
-    if(personagem == NULL) return;
-    
-    personagem->vida += quantidade;
-
-    if(quantidade < 0) printf("Seu personagem sofreu %d de dano\n", quantidade);
-    if(quantidade > 0) printf("Seu personagem ganhou %d de vida\n", quantidade);
-
-    if (personagem->vida > 100) personagem->vida = 100;
-    else if (personagem->vida < 0) personagem->vida = 0;
-}
-
-void pontuacao(Personagem *personagem, int quantidade){
-    if(personagem == NULL) return;
-    
-    personagem->pontuacao += quantidade;
-
-    if(quantidade > 0) printf("Seu personagem ganhou %d de pontuacao\n", quantidade);
-    if(quantidade < 0) printf("Seu personagem perdeu %d de pontuacao\n", quantidade);
-
-    if (personagem->pontuacao < 0) personagem->pontuacao = 0;
-}
-
-void posicao(Personagem *personagem, float posx, float posy){
-    if(personagem == NULL) return;
-
-    if(posx != 0 || posy != 0){
-    (*personagem).posicao_x += posx; //Equivalência com (->)
-    personagem->posicao_y += posy;
+void cadastrar_personagem(Equipe *equipe){
+    if (equipe->tamanho_atual >= equipe->capacidade){
+        int nova_capacidade = equipe->capacidade * 2;
+        
+        Personagem *temp = (Personagem *) realloc(equipe->membros, nova_capacidade * sizeof(Personagem));
+        
+        if (temp == NULL){
+            printf("Erro: Nao foi possivel expandir a capacidade.\n");
+            return;
+        }
+        
+        equipe->membros = temp;
+        
+        for (int i = equipe->capacidade; i < nova_capacidade; i++){
+            equipe->membros[i] = construir_personagem(0, "", 0, 0, 0.0, 0.0, INICIANTE);
+        }
+        printf("\nCapacidade expandida de %d para %d.\n", equipe->capacidade, nova_capacidade);
+        equipe->capacidade = nova_capacidade;
     }
 
-    if(posx > 0) printf("Seu personagem andou pra frente (+%2.0f no eixo x)\n", posx);
-    if(posx < 0) printf("Seu personagem andou pra tras (-%2.0f no eixo x)\n", posx);
-    if(posy > 0) printf("Seu personagem pulou pra cima (+%2.0f no eixo y)\n", posy);
-    if(posy < 0) printf("Seu personagem pulou pra baixo (-%2.0f no eixo y)\n", posy);
+    int id, vida, pontuacao, opcao_nivel;
+    char nome[50];
+    float x, y;
+
+    printf("\nNovo Cadastro: \n");
+    printf("ID: ");
+    scanf("%d", &id);
+    getchar();
+
+    if (buscar_personagem_por_id(equipe, id) != -1){
+        printf("Erro: Ja existe um personagem com o ID %d\n", id);
+        return;
+    }
+
+    printf("Nome: ");
+    fgets(nome, sizeof(nome), stdin);
+    nome[strcspn(nome, "\n")] = '\0';
+
+    printf("Vida (0 a 100): ");
+    scanf("%d", &vida);
+    printf("Pontuacao: ");
+    scanf("%d", &pontuacao);
+    printf("Posicao X: ");
+    scanf("%f", &x);
+    printf("Posicao Y: ");
+    scanf("%f", &y);
+
+    printf("Nivel (0-Iniciante, 1-Intermediario, 2-Avancado, 3-Mestre): ");
+    scanf("%d", &opcao_nivel);
+    getchar();
+
+    if (opcao_nivel < 0 || opcao_nivel > 3) opcao_nivel = 0;
+
+    equipe->membros[equipe->tamanho_atual] = construir_personagem(id, nome, vida, pontuacao, x, y, (Nivel)opcao_nivel);
+    equipe->tamanho_atual++;
+
+    printf("Personagem cadastrado com sucesso!\n");
+}
+
+void exibir_equipe(Equipe *equipe){
+    printf("\nLista da Equipe (%d/%d Membros)\n", equipe->tamanho_atual, equipe->capacidade);
+    
+    if (equipe->tamanho_atual == 0){
+        printf("Nenhum personagem cadastrado.\n");
+        return;
+    }
+
+    for (int i = 0; i < equipe->tamanho_atual; i++){
+        Personagem personagem = equipe->membros[i];
+        printf("ID: %-2d | Nome: %-12s | Vida: %3d | Pontos: %4d | Pos: (%.1f, %.1f) | Nivel: %s\n",
+               personagem.id, personagem.nome, personagem.vida, personagem.pontuacao, personagem.pos.x, personagem.pos.y, obter_nome_nivel(personagem.nivel));
+    }
+}
+
+int buscar_personagem_por_id(Equipe *equipe, int id){
+    for (int i = 0; i < equipe->tamanho_atual; i++){
+        if (equipe->membros[i].id == id){
+            return i;
+        }
+    }
+    return -1;
+}
+
+void alterar_personagem(Equipe *equipe){
+    int id;
+    printf("\nDigite o ID do personagem para alterar: ");
+    scanf("%d", &id);
+    getchar();
+
+    int idx = buscar_personagem_por_id(equipe, id);
+    if (idx == -1){
+        printf("Personagem com ID %d nao encontrado.\n", id);
+        return;
+    }
+
+    printf("Alterando dados do personagem: '%s' (ID %d)\n", equipe->membros[idx].nome, id);
+    
+    printf("Nova Vida: ");
+    scanf("%d", &equipe->membros[idx].vida);
+    if (equipe->membros[idx].vida > 100) equipe->membros[idx].vida = 100;
+    if (equipe->membros[idx].vida < 0) equipe->membros[idx].vida = 0;
+
+    printf("Nova Pontuacao: ");
+    scanf("%d", &equipe->membros[idx].pontuacao);
+    if (equipe->membros[idx].pontuacao < 0) equipe->membros[idx].pontuacao = 0;
+
+    printf("Nova Posicao X: ");
+    scanf("%f", &equipe->membros[idx].pos.x);
+    printf("Nova Posicao Y: ");
+    scanf("%f", &equipe->membros[idx].pos.y);
+
+    int opcao_nivel;
+    printf("Novo Nivel (0-Iniciante, 1-Intermediario, 2-Avancado, 3-Mestre): ");
+    scanf("%d", &opcao_nivel);
+    getchar();
+    if (opcao_nivel >= 0 && opcao_nivel <= 3) {
+        equipe->membros[idx].nivel = (Nivel)opcao_nivel;
+    }
+
+    printf("Dados alterados com sucesso.\n");
 }
 
 // Função de Intercalação (Combinação):
@@ -258,8 +347,8 @@ void intercalar(Personagem *personagem, int inicio, int meio, int fim, int *comp
 }
 
 // Estrutura Recursiva do Merge Sort
-void merge_sort(Personagem *personagem, int inicio, int fim, int *comparacoes) {
-    if (inicio < fim) {
+void merge_sort(Personagem *personagem, int inicio, int fim, int *comparacoes){
+    if (inicio < fim){
         // Dividir: Calcula corretamente o ponto médio
         int meio = inicio + (fim - inicio) / 2;
 
@@ -270,4 +359,23 @@ void merge_sort(Personagem *personagem, int inicio, int fim, int *comparacoes) {
         // Combinar: Intercala as partes ordenadas
         intercalar(personagem, inicio, meio, fim, comparacoes);
     }
+}
+
+void ordenar_equipe(Equipe *equipe){
+    if (equipe->tamanho_atual <= 1){
+        printf("\nEquipe possui elementos insuficientes para ordenacao.\n");
+        return;
+    }
+    int comparacoes = 0;
+    merge_sort(equipe->membros, 0, equipe->tamanho_atual - 1, &comparacoes);
+    printf("\nEquipe ordenada por ID com sucesso! (Comparacoes: %d)\n", comparacoes);
+}
+
+void liberar_equipe(Equipe *equipe){
+    if (equipe->membros != NULL){
+        free(equipe->membros);
+        equipe->membros = NULL;
+    }
+    equipe->capacidade = 0;
+    equipe->tamanho_atual = 0;
 }
