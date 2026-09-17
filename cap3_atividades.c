@@ -1,15 +1,15 @@
 // Capítulo 3 — Catalágo dinâmico de personagens
-// Atividade 18 - Alteração por ponteiro e operador seta
+// Atividade 19 — Equipe como vetor dinâmico de estruturas
 
-// Contexto: Operações como receber dano, avançar no mapa e ganhar pontos devem afetar o personagem realmente armazenado, não uma cópia descartada ao término da função.
-// Descrição detalhada: Implemente versões modificadoras que recebam Personagem *. Use o operador seta para atualizar os campos e compare essa sintaxe com (*ponteiro).membro. As funções deverão rejeitar ponteiro nulo e valores incompatíveis com as regras do catálogo.
+// Contexto: O catálogo precisa deixar de tratar apenas um personagem e passar a administrar uma equipe inteira, cuja quantidade pode crescer durante a execução.
+// Descrição detalhada: Transforme o armazenamento preparado na A…4438 tokens truncated…*Descrição detalhada: Implemente uma função que receba dois vetores ordenados e produza um terceiro também ordenado. Em seguida, crie a estrutura recursiva que divide um intervalo em duas metades, ainda que a ordenação completa seja concluída na próxima atividade.
 // Requisitos:
-// - criar funções para vida, posição e pontuação;
-// - acessar membros principalmente com ->;
-// - impedir vida negativa ou superior ao máximo definido;
-// - validar ponteiro nulo;
-// - demonstrar ao menos uma expressão equivalente com (*p).membro;
-// - confirmar as alterações após o retorno das funções.
+// - manter índices independentes para as duas entradas;
+// - copiar os elementos restantes quando uma entrada terminar;
+// - produzir saída com todos os valores;
+// - calcular corretamente o ponto médio;
+// - identificar em comentários as etapas dividir, resolver e combinar;
+// - contar comparações da intercalação.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,9 +33,13 @@ void vida(Personagem *personagem, int quantidade);
 void pontuacao(Personagem *personagem, int quantidade);
 void posicao(Personagem *personagem, float posx, float posy);
 
+void intercalar(Personagem *vetor, int inicio, int meio, int fim, int *comparacoes);
+void merge_sort(Personagem *vetor, int inicio, int fim, int *comparacoes);
+
 int main(){
-    int capacidade, capacidade_nova, i;
+    int capacidade, capacidade_nova, comparacoes, i;
     capacidade = 5;
+    comparacoes = 0;
     char nome_novo[50];
 
     Personagem exemplo = {0, "Inicializacao posicional ou designada", 100, 0, 0.0, 0.0};
@@ -48,7 +52,11 @@ int main(){
         exit (1);
     }
 
-    personagem[0] = construir_personagem(1, "Hyago", 80, 0, 10.5, 5.0);
+    personagem[0] = construir_personagem(3, "Hyago", 80, 0, 10.5, 5.0);
+    personagem[1] = construir_personagem(4, "Margarida", 100, 800, 5.0, 3.0);
+    personagem[2] = construir_personagem(2, "Gabriel", 85, 600, 2.0, 4.0);
+    personagem[3] = construir_personagem(1, "Ana Paula", 95, 750, 4.0, 1.0);
+    personagem[4] = construir_personagem(5, "Samuel", 40, 200, 6.0, 5.0);
 
     printf("\nEstado Inicial (Externo): \n");
     exibir_personagem(personagem[0]);
@@ -66,6 +74,20 @@ int main(){
 
     // Efeito e Custo da Cópia (Passagem por Valor): O efeito positivo é a segurança: a função trabalha com um clone dos dados, garantindo que o registro original no main não seja alterado acidentalmente. 
     // O custo é a performance e memória: a cada chamada da função, o programa precisa alocar espaço e copiar todos os bytes da estrutura (int, char[50], floats). Em estruturas muito grandes ou em chamadas frequentes, isso consome muito processamento, sendo preferível usar ponteiros.
+
+    printf("\nEquipe antes da ordenacao:\n");
+    for (int i = 0; i < capacidade; i++) {
+        exibir_personagem(personagem[i]);
+    }
+
+    merge_sort(personagem, 0, capacidade - 1, &comparacoes);
+
+    printf("\nEquipe apos Merge Sort (Ordenada por ID):\n");
+    for (int i = 0; i < capacidade; i++) {
+        exibir_personagem(personagem[i]);
+    }
+
+    printf("\nTotal de comparacoes realizadas na intercalacao: %d\n", comparacoes);
 
     printf("\nDigite a nova capacidade: ");
     scanf("%d", &capacidade_nova);
@@ -93,6 +115,7 @@ int main(){
     }
 
         printf("Capacidade Anterior = %d | Capacidade Nova = %d\n", capacidade, capacidade_nova);
+        capacidade = capacidade_nova;
 
         printf("\nDigite o novo nome para o personagem 1: ");
         fgets(nome_novo, sizeof(nome_novo), stdin);
@@ -102,7 +125,7 @@ int main(){
         personagem[0].nome[sizeof(personagem[0].nome) - 1] = '\0';
 
         printf("\nRegistro Apos Alteracao: \n");
-        printf("ID: %d | Nome: %s | Vida: %d | Pontos: %d | Posicao: (%.2f, %.2f)\n", personagem[0].id, personagem[0].nome, personagem[0].vida, personagem[0].pontuacao, personagem[0].posicao_x, personagem[0].posicao_y);
+        exibir_personagem(personagem[0]);
 
     free(personagem);
     personagem = NULL;
@@ -176,4 +199,75 @@ void posicao(Personagem *personagem, float posx, float posy){
     if(posx < 0) printf("Seu personagem andou pra tras (-%2.0f no eixo x)\n", posx);
     if(posy > 0) printf("Seu personagem pulou pra cima (+%2.0f no eixo y)\n", posy);
     if(posy < 0) printf("Seu personagem pulou pra baixo (-%2.0f no eixo y)\n", posy);
+}
+
+// Função de Intercalação (Combinação):
+void intercalar(Personagem *personagem, int inicio, int meio, int fim, int *comparacoes){
+    int n1 = meio - inicio + 1;
+    int n2 = fim - meio;
+
+    // Vetores temporários para as duas metades
+    Personagem *esquerda = (Personagem *) malloc(n1 * sizeof(Personagem));
+    Personagem *direita = (Personagem *) malloc(n2 * sizeof(Personagem));
+
+    if (esquerda == NULL || direita == NULL){
+        printf("Erro ao alocar memoria durante a intercalacao.\n");
+        free(esquerda);
+        free(direita);
+        exit(1);
+    }
+
+    // Copiando dados para os vetores temporários
+    for (int x = 0; x < n1; x++) esquerda[x] = personagem[inicio + x];
+    for (int y = 0; y < n2; y++) direita[y] = personagem[meio + 1 + y];
+
+    // Índices independentes para as entradas e para a saída
+    int i = 0; // Índice da esquerda
+    int j = 0; // Índice da direita
+    int k = inicio; // Índice do vetor principal
+
+    // Intercala comparando os elementos
+    while (i < n1 && j < n2){
+        (*comparacoes)++; // Conta as comparações
+        if (esquerda[i].id <= direita[j].id){
+            personagem[k] = esquerda[i];
+            i++;
+        }else{
+            personagem[k] = direita[j];
+            j++;
+        }
+        k++;
+    }
+
+    // Copia os elementos restantes da esquerda
+    while (i < n1){
+        personagem[k] = esquerda[i];
+        i++;
+        k++;
+    }
+
+    // Copia os elementos restantes da direita
+    while (j < n2){
+        personagem[k] = direita[j];
+        j++;
+        k++;
+    }
+
+    free(esquerda);
+    free(direita);
+}
+
+// Estrutura Recursiva do Merge Sort
+void merge_sort(Personagem *personagem, int inicio, int fim, int *comparacoes) {
+    if (inicio < fim) {
+        // Dividir: Calcula corretamente o ponto médio
+        int meio = inicio + (fim - inicio) / 2;
+
+        // Resolver: Chamadas recursivas para as duas metades
+        merge_sort(personagem, inicio, meio, comparacoes);
+        merge_sort(personagem, meio + 1, fim, comparacoes);
+
+        // Combinar: Intercala as partes ordenadas
+        intercalar(personagem, inicio, meio, fim, comparacoes);
+    }
 }
