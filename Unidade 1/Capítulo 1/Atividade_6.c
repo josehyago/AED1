@@ -1,3 +1,18 @@
+/* 
+ Capítulo 1 - Sistema de exploração com ponteiros e vetores
+ Atividade 6 - Inventário como vetor de ponteiros
+
+ Contexto: Alguns itens encontrados no mapa permanecem armazenados em partes diferentes do estado do jogo. O inventário não precisa copiar os itens: ele pode guardar referências para os objetos já existentes.
+ Descrição detalhada: Finalize o simulador criando um inventário como vetor de ponteiros. O programa deverá apresentar e alterar os mesmos itens por duas formas de acesso: notação de vetor e aritmética de ponteiros. Integre tudo em um menu que permita repetir as ações sem reiniciar o programa.
+ Requisitos:
+ - declarar pelo menos três itens e um vetor de ponteiros para eles;
+ - inicializar todas as posições do inventário com endereços válidos;
+ - criar uma função que use inventario[i];
+ - criar outra que use *(inventario + i);
+ - permitir consultar e alterar itens através do inventário;
+ - oferecer um menu para testar vida, pontuação, mapa e itens.
+*/
+
 #include <stdio.h>
 
 void aplicar_dano(int *pvida)
