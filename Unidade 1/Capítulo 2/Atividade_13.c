@@ -1,5 +1,18 @@
-//Capítulo 2 — Cadastro dinâmico de jogadores e equipes
-//Atividade 13 - Matrizes dinâmicas de duas formas 
+/* 
+ Capítulo 2 — Cadastro dinâmico de jogadores e equipes
+ Atividade 13 - Matrizes dinâmicas de duas formas
+ 
+ Contexto: Mapas maiores precisam ter dimensões escolhidas em tempo de execução. A equipe deseja comparar duas maneiras de representar a mesma grade: um bloco contínuo de memória e um conjunto de linhas independentes.
+ Descrição detalhada: Finalize o cadastro implementando duas matrizes dinâmicas equivalentes. A primeira deve usar um único ponteiro e converter linha e coluna em um deslocamento linear. A segunda deve usar ponteiro de ponteiros. Crie operações de preenchimento, exibição e liberação para ambas.
+ Requisitos:
+ - validar linhas, colunas e possíveis estouros no cálculo do tamanho;
+ - acessar a matriz linear por linha * colunas + coluna;
+ - alocar separadamente o vetor de linhas e cada linha da segunda matriz;
+ - liberar as linhas já criadas se ocorrer falha parcial;
+ - comparar as duas representações em comentários;
+ - integrar as operações anteriores em um menu final.
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

@@ -1,5 +1,18 @@
-//Capítulo 2 — Cadastro dinâmico de jogadores e equipes
-//Atividade 10 - Cadrastro alocado em tempo de execução
+/* 
+ Capítulo 2 — Cadastro dinâmico de jogadores e equipes
+ Atividade 10 - Cadrastro alocado em tempo de execução
+
+ Contexto: Equipes diferentes possuem quantidades distintas de jogadores. Reservar sempre o maior espaço possível desperdiça memória, portanto o cadastro deve ser dimensionado no momento da execução.
+ Descrição detalhada: Troque o vetor fixo principal por um bloco alocado de acordo com a quantidade informada. Calcule a quantidade de bytes com sizeof, verifique a alocação e só então preencha os registros. Se a reserva falhar, encerre essa operação sem acessar o ponteiro.
+ Requisitos:
+ - validar a quantidade solicitada;
+ - alocar com malloc(quantidade * sizeof(*ponteiro));
+ - verificar o retorno de malloc;
+ - preencher e exibir somente posições válidas;
+ - documentar a vantagem de sizeof(*ponteiro);
+ - liberar o bloco quando ele não for mais necessário.
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
