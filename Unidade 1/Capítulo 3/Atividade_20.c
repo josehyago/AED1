@@ -1,15 +1,17 @@
-// Capítulo 3 — Catalágo dinâmico de personagens
-// Atividade 20 — Estruturas aninhadas e enumerações
+/*
+ Capítulo 3 — Catalágo dinâmico de personagens
+ Atividade 20 — Estruturas aninhadas e enumerações
 
-// Contexto: O modelo do catálogo precisa expressar melhor os conceitos do domínio. Coordenadas formam uma posição, personagens pertencem a equipes e estados como classe ou nível devem usar valores nomeados em vez de números soltos.
-// Descrição detalhada: Finalize o capítulo reorganizando os tipos. Crie Posicao, incorpore-a em Personagem, defina Equipe e represente uma classificação com enum. Atualize as funções anteriores para trabalhar com o novo modelo sem perder recursos já implementados.
-// Requisitos:
-// - aninhar Posicao em Personagem;
-// - criar uma estrutura que represente a equipe e seu catálogo;
-// - definir um enum para classe, estado ou nível;
-// - converter os valores enumerados em textos legíveis;
-// - atualizar cadastro, busca, alteração e listagem;
-// - disponibilizar todas as operações em um menu integrado.
+ Contexto: O modelo do catálogo precisa expressar melhor os conceitos do domínio. Coordenadas formam uma posição, personagens pertencem a equipes e estados como classe ou nível devem usar valores nomeados em vez de números soltos.
+ Descrição detalhada: Finalize o capítulo reorganizando os tipos. Crie Posicao, incorpore-a em Personagem, defina Equipe e represente uma classificação com enum. Atualize as funções anteriores para trabalhar com o novo modelo sem perder recursos já implementados.
+ Requisitos:
+ - aninhar Posicao em Personagem;
+ - criar uma estrutura que represente a equipe e seu catálogo;
+ - definir um enum para classe, estado ou nível;
+ - converter os valores enumerados em textos legíveis;
+ - atualizar cadastro, busca, alteração e listagem;
+ - disponibilizar todas as operações em um menu integrado.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>

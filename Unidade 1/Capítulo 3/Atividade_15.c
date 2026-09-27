@@ -1,15 +1,17 @@
-// Capítulo 3 — Catalágo dinâmico de personagens
-// Atividade 15 - Definição e alteração de personagens
+/* 
+ Capítulo 3 — Catalágo dinâmico de personagens
+ Atividade 15 - Definição e alteração de personagens
 
-// Contexto: Uma pontuação isolada não é suficiente para representar um personagem. O catálogo deve agrupar em um único registro todos os dados que descrevem cada participante do jogo.
-// Descrição detalhada: Defina uma estrutura com identificador, nome, vida, pontuação e posição. Crie um personagem de exemplo, mostre seus dados e realize alterações controladas. O objetivo é observar como membros de tipos diferentes formam uma única unidade lógica.
-// Requisitos:
-// - declarar a struct antes das funções que a utilizam;
-// - criar e preencher ao menos um personagem;
-// - acessar membros com o operador ponto;
-// - alterar vida, pontuação e posição;
-// - exibir o estado antes e depois;
-// - preservar valores dentro de limites coerentes.
+ Contexto: Uma pontuação isolada não é suficiente para representar um personagem. O catálogo deve agrupar em um único registro todos os dados que descrevem cada participante do jogo.
+ Descrição detalhada: Defina uma estrutura com identificador, nome, vida, pontuação e posição. Crie um personagem de exemplo, mostre seus dados e realize alterações controladas. O objetivo é observar como membros de tipos diferentes formam uma única unidade lógica.
+ Requisitos:
+ - declarar a struct antes das funções que a utilizam;
+ - criar e preencher ao menos um personagem;
+ - acessar membros com o operador ponto;
+ - alterar vida, pontuação e posição;
+ - exibir o estado antes e depois;
+ - preservar valores dentro de limites coerentes.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
