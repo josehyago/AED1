@@ -1,4 +1,2 @@
-ID: 1 | Nome: Joao | Pontuacao: 100
-ID: 2 | Nome: Maria | Pontuacao: 50
-ID: 3 | Nome: Margarida | Pontuacao: 300
-ID: 4 | Nome: Ana | Pontuacao: 20
+ID: 1 | Nome: J1 | Pontuacao: 100
+ID: 2 | Nome: J2 | Pontuacao: 100
