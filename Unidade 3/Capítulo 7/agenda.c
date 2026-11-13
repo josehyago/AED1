@@ -23,8 +23,41 @@ int inserir_inicio(Lista *l, Missao m){
     novo->prox = l->inicio;
     l->inicio = novo;
 
-    printf("inicio agora: %s\n", l->inicio->dado.titulo); // Teste para verificar se o início da lista foi atualizado corretamente
     return 1;
+}
+
+int inserir_fim(Lista *l, Missao m){
+    if (l == NULL) return 0;
+
+    No *novo = (No *) malloc(sizeof(*novo));
+    if (novo == NULL) return 0;
+
+    novo->dado = m;
+    novo->prox = NULL;
+
+    if (l->inicio == NULL){
+        l->inicio = novo;
+        return 1;
+    }
+
+    No *ultimo = l->inicio;
+    while (ultimo->prox != NULL){
+        ultimo = ultimo->prox;
+    }
+    ultimo->prox = novo;
+    return 1;
+}
+
+void exibir_lista(const Lista *l){
+    if (l == NULL) return;
+    if (l->inicio == NULL){ 
+        printf("Lista vazia!\n"); 
+        return;
+    }
+
+    for (No *pi = l->inicio; pi != NULL; pi = pi->prox){
+        exibir_missao(&pi->dado);
+    }
 }
 
 Missao criar_missao(int id, const char *titulo, int prioridade){
@@ -41,7 +74,7 @@ Missao criar_missao(int id, const char *titulo, int prioridade){
     return m;
 }
 
-/* void exibir_missao(const Missao *m){
+void exibir_missao(const Missao *m){
     if (m == NULL) return;
-    printf("\nID: %d | Titulo: %s | Prioridade: %d\n", m->id, m->titulo, m->prioridade);
-} */
+    printf("ID: %d | Titulo: %s | Prioridade: %d\n", m->id, m->titulo, m->prioridade);
+}

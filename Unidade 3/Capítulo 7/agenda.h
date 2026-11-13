@@ -22,8 +22,10 @@ typedef struct{
 
 void inicializar_lista(Lista *l);
 int inserir_inicio(Lista *l, Missao m);
+int inserir_fim(Lista *l, Missao m);
+void exibir_lista(const Lista *l);
 
 Missao criar_missao(int id, const char *titulo, int prioridade);
-// void exibir_missao(const Missao *m);
+void exibir_missao(const Missao *m);
 
 #endif
