@@ -85,7 +85,7 @@ Clique em um capítulo para expandir a lista de atividades.
 |------|-----------|---------|
 | .txt | Dados da partida em texto | [partidas.txt](Unidade%202/Cap%C3%ADtulo%204/partidas.txt) |
 | .txt | Relatório com alterações feitas nos dados | [partidas_relatorio.txt](Unidade%202/Cap%C3%ADtulo%204/partidas_relatorio.txt) |
-| .bin | Dados da partida em binário | [partida.bin](Unidade%202/Cap%C3%ADtulo%204/partidas.bin) |
+| .bin | Dados da partida em binário | [partida.bin](Unidade%202/Cap%C3%ADtulo%204/partida.bin) |
 
 > Arquivos gerados pelos programas: `partidas.txt`, `partidas_relatorio.txt` e `partida.bin`.
 
