@@ -81,6 +81,12 @@ Clique em um capítulo para expandir a lista de atividades.
 | Extra 6 | Refaz a Atividade 21 | [Atividade_extra6.c](Unidade%202/Cap%C3%ADtulo%204/Atividade_extra6.c) |
 | Extra 7 | Refaz a Atividade 24 | [Atividade_extra7.c](Unidade%202/Cap%C3%ADtulo%204/Atividade_extra7.c) |
 
+| Tipo | Descrição | Arquivo |
+|------|-----------|---------|
+| .txt | Dados da partida em texto | [partidas.txt](Unidade%202/Cap%C3%ADtulo%204/partidas.txt) |
+| .txt | Relatório com alterações feitas nos dados | [partidas_relatorio.txt](Unidade%202/Cap%C3%ADtulo%204/partidas_relatorio.txt) |
+| .bin | Dados da partida em binário | [partida.bin](Unidade%202/Cap%C3%ADtulo%204/partidas.bin) |
+
 > Arquivos gerados pelos programas: `partidas.txt`, `partidas_relatorio.txt` e `partida.bin`.
 
 </details>
