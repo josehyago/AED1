@@ -30,7 +30,6 @@ int inserir_fim(Lista *l, Missao m);
 int inserir_apos(Lista *l, int id, Missao m);
 void resultado_operacao(int r);
 
-// Retornos: 1 = exibiu | 0 = erro (lista NULL)
 void exibir_lista(const Lista *l);
 
 Missao criar_missao(int id, const char *titulo, int prioridade);
