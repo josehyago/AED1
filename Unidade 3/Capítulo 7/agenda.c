@@ -73,11 +73,35 @@ int inserir_apos(Lista *l, int id, Missao m){
     return 1;
 }
 
+int inserir_antes(Lista *l, int id, Missao m){
+    if (l == NULL) return 0;
+
+    No *anterior = NULL;
+    No *atual = l->inicio;
+
+    while (atual != NULL && atual->dado.id != id){
+        anterior = atual;
+        atual = atual->prox;
+    }
+
+    if (atual == NULL) return -1;
+
+    No *novo = (No *) malloc(sizeof(*novo));
+    if (novo == NULL) return 0;
+
+    novo->dado = m;
+    novo->prox = atual;
+
+    if (anterior == NULL) l->inicio = novo;
+    else anterior->prox = novo;
+    return 1;
+}
+
 void resultado_operacao(int r){
     switch (r){
-        case 1:  printf("Missao inserida com sucesso!\n"); break;
+        case 1:  printf("Operacao realizada com sucesso!\n"); break;
         case 0: printf("Erro na operacao!\n"); break;
-        case -1:  printf("Missao de referencia nao encontrada!\n"); break;
+        case -1:  printf("Missao de referencia nao encontrada ou lista vazia\n"); break;
     }
 }
 
@@ -91,6 +115,18 @@ void exibir_lista(const Lista *l){
     for (No *pi = l->inicio; pi != NULL; pi = pi->prox){
         exibir_missao(&pi->dado);
     }
+}
+
+int remover_inicio(Lista *l){
+    if (l == NULL) return 0;
+    if (l->inicio == NULL) return -1;
+
+    No *alvo = l->inicio;
+    printf("\nRemovendo missao:\n");
+    exibir_missao(&alvo->dado);
+    l->inicio = alvo->prox;
+    free(alvo);
+    return 1;
 }
 
 Missao criar_missao(int id, const char *titulo, int prioridade){

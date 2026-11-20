@@ -23,15 +23,20 @@ typedef struct{
 
 void inicializar_lista(Lista *l);
 
-// Retornos: 1 = inseriu | 0 = erro (lista NULL ou malloc) | -1 = referencia nao encontrada
-
+// Retornos de inserir_inicio e inserir_fim: 1 = inseriu | 0 = erro (lista NULL ou malloc)
 int inserir_inicio(Lista *l, Missao m);
 int inserir_fim(Lista *l, Missao m);
+
+// Retornos de inserir_apos e inserir_antes: 1 = inseriu | 0 = erro (lista NULL ou malloc) | -1 = referencia nao encontrada (lista intacta)
 int inserir_apos(Lista *l, int id, Missao m);
+int inserir_antes(Lista *l, int id, Missao m);
+
+// Auxiliar de mensagem: traduz 1 / 0 / -1 em texto (vale para insercoes e remocao)
 void resultado_operacao(int r);
 
-// Retornos: 1 = exibiu | 0 = erro (lista NULL)
 void exibir_lista(const Lista *l);
+
+int remover_inicio(Lista *l);
 
 Missao criar_missao(int id, const char *titulo, int prioridade);
 void exibir_missao(const Missao *m);
