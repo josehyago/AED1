@@ -37,6 +37,8 @@ void resultado_operacao(int r);
 void exibir_lista(const Lista *l);
 
 int remover_inicio(Lista *l);
+int remover_final(Lista *l);
+int remover_missao(Lista *l, int id);
 
 Missao criar_missao(int id, const char *titulo, int prioridade);
 void exibir_missao(const Missao *m);

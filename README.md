@@ -147,6 +147,8 @@ Clique em um capítulo para expandir a lista de atividades.
 | 42 | Tipo abstrato de dados e inserção no início | [Atividade_42.c](Unidade%203/Cap%C3%ADtulo%207/Atividade_42.c) |
 | 43 | Exibição e inserção no fim | [Atividade_43.c](Unidade%203/Cap%C3%ADtulo%207/Atividade_43.c) |
 | 44 | Busca e inserção após um nó | [Atividade_44.c](Unidade%203/Cap%C3%ADtulo%207/Atividade_44.c) |
+| 45 | Inserção antes e remoção do primeiro nó | [Atividade_45.c](Unidade%203/Cap%C3%ADtulo%207/Atividade_45.c) |
+| 46 | Remoção do último nó e por critério | [Atividade_46.c](Unidade%203/Cap%C3%ADtulo%207/Atividade_46.c) |
 | Extra 14 | Refaz a Atividade 43 | [Atividade_extra14.c](Unidade%203/Cap%C3%ADtulo%207/Atividade_extra14.c) |
 | Extra 15 | Refaz a Atividade 55  | [Atividade_extra15.c](Unidade%203/Cap%C3%ADtulo%207/Atividade_extra15.c) |
 | Extra 16 | Refaz a Atividade 52 | [Atividade_extra16.c](Unidade%203/Cap%C3%ADtulo%207/Atividade_extra16.c) |

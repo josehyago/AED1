@@ -129,6 +129,52 @@ int remover_inicio(Lista *l){
     return 1;
 }
 
+int remover_final(Lista *l){
+    if (l == NULL) return 0;
+    if (l->inicio == NULL) return -1;
+
+    No *anterior = NULL;
+    No *atual = l->inicio;
+
+    while (atual->prox != NULL){
+        anterior = atual;
+        atual = atual->prox;
+    }
+
+    printf("\nRemovendo missao:\n");
+    exibir_missao(&atual->dado);
+
+    if (anterior == NULL) l->inicio = NULL;
+    else anterior->prox = NULL;
+
+    free(atual);
+    return 1;
+}
+
+int remover_missao(Lista *l, int id){
+    if (l == NULL) return 0;
+    if (l->inicio == NULL) return -1;
+
+    No *anterior = NULL;
+    No *atual = l->inicio;
+
+    while (atual != NULL && atual->dado.id != id){
+        anterior = atual;
+        atual = atual->prox;
+    }
+
+    if (atual == NULL) return -1;
+
+    printf("\nRemovendo missao:\n");
+    exibir_missao(&atual->dado);
+
+    if (anterior == NULL) l->inicio = atual->prox;
+    else anterior->prox = atual->prox;
+
+    free(atual);
+    return 1;
+}
+
 Missao criar_missao(int id, const char *titulo, int prioridade){
     Missao m;
 
