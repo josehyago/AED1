@@ -102,6 +102,8 @@ void resultado_operacao(int r){
         case 1:  printf("Operacao realizada com sucesso!\n"); break;
         case 0: printf("Erro na operacao!\n"); break;
         case -1:  printf("Missao de referencia nao encontrada ou lista vazia\n"); break;
+        case -2: printf("Referencia encontrada, mas nao ha missao apos/antes dela\n"); break;
+        default: printf("Codigo de retorno desconhecido: %d\n", r); break;
     }
 }
 
@@ -172,6 +174,47 @@ int remover_missao(Lista *l, int id){
     else anterior->prox = atual->prox;
 
     free(atual);
+    return 1;
+}
+
+int remover_apos(Lista *l, int id){
+    if (l == NULL) return 0;
+
+    No *referencia = l->inicio;
+    while (referencia != NULL && referencia->dado.id != id) referencia = referencia->prox;
+    if (referencia == NULL) return -1;
+
+    No *alvo = referencia->prox;
+    if (alvo == NULL) return -2;
+
+    printf("\nRemovendo missao:\n");
+    exibir_missao(&alvo->dado);
+    referencia->prox = alvo->prox;
+    free(alvo);
+    return 1;
+}
+
+int remover_antes(Lista *l, int id){
+    if (l == NULL) return 0;
+
+    No *ant_anterior = NULL;
+    No *anterior = NULL;
+    No *atual = l->inicio;
+
+    while (atual != NULL && atual->dado.id != id){
+        ant_anterior = anterior;
+        anterior = atual;
+        atual = atual->prox;
+    }
+
+    if (atual == NULL) return -1;
+    if (anterior == NULL) return -2;
+
+    printf("\nRemovendo missao:\n");
+    exibir_missao(&anterior->dado);
+    if (ant_anterior == NULL) l->inicio = atual;
+    else ant_anterior->prox = atual;
+    free(anterior);
     return 1;
 }
 

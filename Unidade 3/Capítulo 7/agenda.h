@@ -31,7 +31,7 @@ int inserir_fim(Lista *l, Missao m);
 int inserir_apos(Lista *l, int id, Missao m);
 int inserir_antes(Lista *l, int id, Missao m);
 
-// Auxiliar de mensagem: traduz 1 / 0 / -1 em texto (vale para insercoes e remocao)
+// Auxiliar de mensagem: traduz os codigos de retorno em texto (vale para insercoes e remocoes)
 void resultado_operacao(int r);
 
 void exibir_lista(const Lista *l);
@@ -39,6 +39,9 @@ void exibir_lista(const Lista *l);
 int remover_inicio(Lista *l);
 int remover_final(Lista *l);
 int remover_missao(Lista *l, int id);
+// remover_apos e remover_antes: 1 = removeu | 0 = lista NULL | -1 = referencia nao encontrada/lista vazia | -2 = nao ha no apos/antes da referencia
+int remover_apos(Lista *l, int id);
+int remover_antes(Lista *l, int id);
 
 Missao criar_missao(int id, const char *titulo, int prioridade);
 void exibir_missao(const Missao *m);
