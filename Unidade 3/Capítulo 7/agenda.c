@@ -102,7 +102,7 @@ void resultado_operacao(int r){
         case 1:  printf("Operacao realizada com sucesso!\n"); break;
         case 0: printf("Erro na operacao!\n"); break;
         case -1:  printf("Missao de referencia nao encontrada ou lista vazia\n"); break;
-        case -2: printf("Referencia encontrada, mas nao ha missao apos/antes dela\n"); break;
+        case -2: printf("Referencia sem missao adjacente ou dados da missao invalidos\n"); break;
         default: printf("Codigo de retorno desconhecido: %d\n", r); break;
     }
 }
@@ -215,6 +215,44 @@ int remover_antes(Lista *l, int id){
     if (ant_anterior == NULL) l->inicio = atual;
     else ant_anterior->prox = atual;
     free(anterior);
+    return 1;
+}
+
+// Regras da agenda: titulo nao vazio (e terminado em '\0') e prioridade >= 0.
+static int missao_valida(const Missao *m){
+    if (m == NULL) return 0;
+    if (memchr(m->titulo, '\0', TAM_TITULO) == NULL) return 0;
+    if (m->titulo[0] == '\0') return 0;
+    if (m->prioridade < 0) return 0;
+    return 1;
+}
+
+int limpar_lista(Lista *l){
+    if (l == NULL) return 0;
+    if (l->inicio == NULL) return -1;
+
+    No *atual = l->inicio;
+    while (atual != NULL){
+        No *proximo = atual->prox;
+        printf("\nLiberando missao:\n");
+        exibir_missao(&atual->dado);
+        free(atual);
+        atual = proximo;
+    }
+    l->inicio = NULL;
+    return 1;
+}
+
+int alterar_missao(Lista *l, int id, Missao nova){
+    if (l == NULL) return 0;
+    if (!missao_valida(&nova)) return -2;
+
+    No *alvo = buscar_missao(l, id);
+    if (alvo == NULL) return -1;
+
+    strncpy(alvo->dado.titulo, nova.titulo, TAM_TITULO - 1);
+    alvo->dado.titulo[TAM_TITULO - 1] = '\0';
+    alvo->dado.prioridade = nova.prioridade;
     return 1;
 }
 

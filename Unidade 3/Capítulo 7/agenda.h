@@ -43,6 +43,11 @@ int remover_missao(Lista *l, int id);
 int remover_apos(Lista *l, int id);
 int remover_antes(Lista *l, int id);
 
+// limpar_lista: 1 = limpou | 0 = lista NULL | -1 = lista ja vazia
+int limpar_lista(Lista *l);
+// alterar_missao: 1 = alterou | 0 = lista NULL | -1 = identificador nao encontrado | -2 = dados invalidos
+int alterar_missao(Lista *l, int id, Missao nova);
+
 Missao criar_missao(int id, const char *titulo, int prioridade);
 void exibir_missao(const Missao *m);
 
