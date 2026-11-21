@@ -305,6 +305,63 @@ int inserir_lote(Lista *l, const Missao *lote, int qtd){
     return 1;
 }
 
+static int vem_depois(const Missao *a, const Missao *b){
+    if (a->prioridade != b->prioridade) return a->prioridade > b->prioridade;
+    return a->id < b->id;
+}
+
+int ordenar_lista(Lista *l){
+    if (l == NULL) return 0;
+    if (l->inicio == NULL) return -1;
+
+    // Ordenacao por troca de dados: prioridade 1 primeiro, empate pelo maior ID.
+    // Os ponteiros dos nos continuam inalterados.
+    No *fim = NULL;
+    int trocou;
+
+    do {
+        trocou = 0;
+        No *pi = l->inicio;
+        while (pi->prox != fim){
+            if (vem_depois(&pi->dado, &pi->prox->dado)){
+                Missao temp = pi->dado;
+                pi->dado = pi->prox->dado;
+                pi->prox->dado = temp;
+                trocou = 1;
+            }
+            pi = pi->prox;
+        }
+        fim = pi;
+    } while (trocou && fim != l->inicio);
+    return 1;
+}
+
+int salvar_lista(const Lista *l, const char *caminho){
+    if (l == NULL || caminho == NULL || caminho[0] == '\0') return 0;
+
+    int qtd = tamanho_lista(l);
+    if (qtd < 0) return 0;
+    if (qtd > MAX_REGISTROS) return -2;
+
+    FILE *arq = fopen(caminho, "wb");
+    if (arq == NULL) return -1;
+
+    if (fwrite(&qtd, sizeof(qtd), 1, arq) != 1){
+        fclose(arq);
+        return 0;
+    }
+
+    for (const No *pi = l->inicio; pi != NULL; pi = pi->prox){
+        if (fwrite(&pi->dado, sizeof(pi->dado), 1, arq) != 1){
+            fclose(arq);
+            return 0;
+        }
+    }
+
+    if (fclose(arq) != 0) return 0;
+    return 1;
+}
+
 Missao criar_missao(int id, const char *titulo, int prioridade){
     Missao m;
 

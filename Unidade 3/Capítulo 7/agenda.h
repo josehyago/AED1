@@ -3,6 +3,7 @@
 
 #define TAM_TITULO 100
 #define MAX_LOTE 100
+#define MAX_REGISTROS 1000
 
 /*
     - Missao e Lista são públicas: A main precisa criar missões e declarar a lista.
@@ -52,6 +53,10 @@ int alterar_missao(Lista *l, int id, Missao nova);
 int tamanho_lista(const Lista *l);
 // inserir_lote preserva a ordem do vetor e adiciona o lote ao final da lista.
 int inserir_lote(Lista *l, const Missao *lote, int qtd);
+
+// Ordena por prioridade crescente (1 primeiro) e, em caso de empate, por ID decrescente.
+int ordenar_lista(Lista *l);
+int salvar_lista(const Lista *l, const char *caminho);
 
 Missao criar_missao(int id, const char *titulo, int prioridade);
 void exibir_missao(const Missao *m);
