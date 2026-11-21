@@ -2,6 +2,7 @@
 #define AGENDA_H
 
 #define TAM_TITULO 100
+#define MAX_LOTE 100
 
 /*
     - Missao e Lista são públicas: A main precisa criar missões e declarar a lista.
@@ -47,6 +48,10 @@ int remover_antes(Lista *l, int id);
 int limpar_lista(Lista *l);
 // alterar_missao: 1 = alterou | 0 = lista NULL | -1 = identificador nao encontrado | -2 = dados invalidos
 int alterar_missao(Lista *l, int id, Missao nova);
+
+int tamanho_lista(const Lista *l);
+// inserir_lote preserva a ordem do vetor e adiciona o lote ao final da lista.
+int inserir_lote(Lista *l, const Missao *lote, int qtd);
 
 Missao criar_missao(int id, const char *titulo, int prioridade);
 void exibir_missao(const Missao *m);

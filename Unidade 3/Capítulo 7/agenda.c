@@ -256,6 +256,55 @@ int alterar_missao(Lista *l, int id, Missao nova){
     return 1;
 }
 
+int tamanho_lista(const Lista *l){
+    if (l == NULL) return -1;
+
+    int n = 0;
+    for (const No *pi = l->inicio; pi != NULL; pi = pi->prox){
+        n++;
+    }
+    return n;
+}
+
+int inserir_lote(Lista *l, const Missao *lote, int qtd){
+    if (l == NULL || lote == NULL) return 0;
+    if (qtd <= 0 || qtd > MAX_LOTE) return -2;
+
+    for (int i = 0; i < qtd; i++){
+        if (!missao_valida(&lote[i])) return -2;
+    }
+
+    No *ultimo_original = l->inicio;
+    if (ultimo_original != NULL){
+        while (ultimo_original->prox != NULL){
+            ultimo_original = ultimo_original->prox;
+        }
+    }
+
+    No *ultimo = ultimo_original;
+    for (int i = 0; i < qtd; i++){
+        No *novo = (No *) malloc(sizeof(*novo));
+        if (novo == NULL){
+            No *sobra = (ultimo_original == NULL) ? l->inicio : ultimo_original->prox;
+            if (ultimo_original == NULL) l->inicio = NULL;
+            else ultimo_original->prox = NULL;
+            while (sobra != NULL){
+                No *proximo = sobra->prox;
+                free(sobra);
+                sobra = proximo;
+            }
+            return 0;
+        }
+
+        novo->dado = lote[i];
+        novo->prox = NULL;
+        if (ultimo == NULL) l->inicio = novo;
+        else ultimo->prox = novo;
+        ultimo = novo;
+    }
+    return 1;
+}
+
 Missao criar_missao(int id, const char *titulo, int prioridade){
     Missao m;
 
