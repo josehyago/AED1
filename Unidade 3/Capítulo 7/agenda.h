@@ -58,6 +58,10 @@ int inserir_lote(Lista *l, const Missao *lote, int qtd);
 int ordenar_lista(Lista *l);
 int salvar_lista(const Lista *l, const char *caminho);
 
+// Carrega somente quando a lista estiver vazia. Retornos: 1 sucesso, 0 erro,
+// -1 arquivo inexistente, -2 lista nao vazia.
+int carregar_lista(Lista *l, const char *caminho);
+
 Missao criar_missao(int id, const char *titulo, int prioridade);
 void exibir_missao(const Missao *m);
 

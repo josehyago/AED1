@@ -101,8 +101,8 @@ void resultado_operacao(int r){
     switch (r){
         case 1:  printf("Operacao realizada com sucesso!\n"); break;
         case 0: printf("Erro na operacao!\n"); break;
-        case -1:  printf("Missao de referencia nao encontrada ou lista vazia\n"); break;
-        case -2: printf("Referencia sem missao adjacente ou dados da missao invalidos\n"); break;
+        case -1:  printf("Missao de referencia nao encontrada, lista vazia ou arquivo inexistente\n"); break;
+        case -2: printf("Operacao recusada, dados invalidos ou lista nao vazia\n"); break;
         default: printf("Codigo de retorno desconhecido: %d\n", r); break;
     }
 }
@@ -359,6 +359,55 @@ int salvar_lista(const Lista *l, const char *caminho){
     }
 
     if (fclose(arq) != 0) return 0;
+    return 1;
+}
+
+int carregar_lista(Lista *l, const char *caminho){
+    if (l == NULL || caminho == NULL || caminho[0] == '\0') return 0;
+    if (l->inicio != NULL) return -2;
+
+    FILE *arq = fopen(caminho, "rb");
+    if (arq == NULL) return -1;
+
+    int qtd;
+    if (fread(&qtd, sizeof(int), 1, arq) != 1 || qtd < 0 || qtd > MAX_REGISTROS){
+        fclose(arq);
+        return 0;
+    }
+
+    Lista temp;
+    inicializar_lista(&temp);
+    No *ultimo = NULL;
+
+    for (int i = 0; i < qtd; i++){
+        Missao m;
+        if (fread(&m, sizeof(Missao), 1, arq) != 1){
+            fclose(arq);
+            limpar_lista(&temp);
+            return 0;
+        }
+        m.titulo[TAM_TITULO - 1] = '\0';
+        if (!missao_valida(&m)){
+            fclose(arq);
+            limpar_lista(&temp);
+            return 0;
+        }
+
+        No *novo = (No *) malloc(sizeof(*novo));
+        if (novo == NULL){
+            fclose(arq);
+            limpar_lista(&temp);
+            return 0;
+        }
+        novo->dado = m;
+        novo->prox = NULL;
+        if (ultimo == NULL) temp.inicio = novo;
+        else ultimo->prox = novo;
+        ultimo = novo;
+    }
+
+    fclose(arq);
+    l->inicio = temp.inicio;
     return 1;
 }
 
