@@ -141,23 +141,39 @@ Clique em um capítulo para expandir a lista de atividades.
 
 &nbsp;
 
-| Atividade | Tema | Arquivo |
-|-----------|------|---------|
-| 41 | Separação do programa em arquivos | [Atividade_41.c](Unidade%203/Cap%C3%ADtulo%207/Atividade_41.c) |
-| 42 | Tipo abstrato de dados e inserção no início | [Atividade_42.c](Unidade%203/Cap%C3%ADtulo%207/Atividade_42.c) |
-| 43 | Exibição e inserção no fim | [Atividade_43.c](Unidade%203/Cap%C3%ADtulo%207/Atividade_43.c) |
-| 44 | Busca e inserção após um nó | [Atividade_44.c](Unidade%203/Cap%C3%ADtulo%207/Atividade_44.c) |
-| 45 | Inserção antes e remoção do primeiro nó | [Atividade_45.c](Unidade%203/Cap%C3%ADtulo%207/Atividade_45.c) |
-| 46 | Remoção do último nó e por critério | [Atividade_46.c](Unidade%203/Cap%C3%ADtulo%207/Atividade_46.c) |
-| Extra 14 | Refaz a Atividade 43 | [Atividade_extra14.c](Unidade%203/Cap%C3%ADtulo%207/Atividade_extra14.c) |
+| Atividade | Tema | Pasta/Arquivo |
+|-----------|------|---------------|
+| 41 | Separação do programa em arquivos | [Atividade 41](Unidade%203/Cap%C3%ADtulo%207/Atividade%2041) |
+| 42 | Tipo abstrato de dados e inserção no início | [Atividade 42](Unidade%203/Cap%C3%ADtulo%207/Atividade%2042) |
+| 43 | Exibição e inserção no fim | [Atividade 43](Unidade%203/Cap%C3%ADtulo%207/Atividade%2043) |
+| 44 | Busca e inserção após um nó | [Atividade 44](Unidade%203/Cap%C3%ADtulo%207/Atividade%2044) |
+| 45 | Inserção antes e remoção do primeiro nó | [Atividade 45](Unidade%203/Cap%C3%ADtulo%207/Atividade%2045)|
+| 46 | Remoção do último nó e por critério | [Atividade 46](Unidade%203/Cap%C3%ADtulo%207/Atividade%2046) |
+| 47 | Remoção depois e antes de uma referência | [Atividade 47](Unidade%203/Cap%C3%ADtulo%207/Atividade%2047) |
+| 48 | Limpeza completa e alteração de dados | [Atividade 48](Unidade%203/Cap%C3%ADtulo%207/Atividade%2048) |
+| 49 | Tamanho e criação em lote | [Atividade 49](Unidade%203/Cap%C3%ADtulo%207/Atividade%2049) |
+| 50 | Ordenação e persistência da lista | [Atividade 50](Unidade%203/Cap%C3%ADtulo%207/Atividade%2050) |
+| 51 | Leitura do arquivo e modulo completo | [Atividade 51](Unidade%203/Cap%C3%ADtulo%207/Atividade%2051) |
+| Extra 14 | Refaz a Atividade 43 | [Atividade_extra14.c](Unidade%203/Cap%C3%ADtulo%207/Atividade_extra14.) |
 | Extra 15 | Refaz a Atividade 55  | [Atividade_extra15.c](Unidade%203/Cap%C3%ADtulo%207/Atividade_extra15.c) |
 | Extra 16 | Refaz a Atividade 52 | [Atividade_extra16.c](Unidade%203/Cap%C3%ADtulo%207/Atividade_extra16.c) |
+| Extra 17 | Utilize um código que você tenha implementado e separe em módulos | [Atividade Extra 17](Unidade%203/Cap%C3%ADtulo%207/Atividade%20Extra%2017) |
 
-| Tipo | Descrição | Arquivo |
-|------|-----------|---------|
-| .h | Cabeçalho | [agenda.h](Unidade%203/Cap%C3%ADtulo%207/agenda.h) |
-| .c | Implementação | [agenda.c](Unidade%203/Cap%C3%ADtulo%207/agenda.c) |
+</details>
 
+<details>
+<summary><b>Capítulo 8 — Gerenciador de atendimento com pilha e fila</b></summary>
+
+&nbsp;
+
+| Atividade | Tema | Arquivo |
+|-----------|------|---------|
+| 52 | Operações fundamentais da pilha | [Atividade_52.c](Unidade%203/Cap%C3%ADtulo%208/Atividade_52.c) |
+| 53 | Estado da pilha e consulta ao topo | [Atividade_53.c](Unidade%203/Cap%C3%ADtulo%208/Atividade_53.c) |
+| 54 | Inversão e persistência da pilha | [Atividade_54.c](Unidade%203/Cap%C3%ADtulo%208/Atividade_54.c) |
+| 55 | Operações fundamentais da fila | [Atividade_55.c](Unidade%203/Cap%C3%ADtulo%208/Atividade_55.c) |
+| 56 | Estado da fila e consulta ao início | [Atividade_56.c](Unidade%203/Cap%C3%ADtulo%208/Atividade_56.c) |
+| 57 | Persistência da fila e integração final | [Atividade_57.c](Unidade%203/Cap%C3%ADtulo%208/Atividade_57.c) |
 
 </details>
 
